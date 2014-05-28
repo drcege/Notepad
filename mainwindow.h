@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QLabel>
+#include <qobject.h>
 #include "data.h"
 
 namespace Ui
@@ -23,6 +24,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    bool eventFilter(QObject*,QEvent*);
 
 private slots:
 

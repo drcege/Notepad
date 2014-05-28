@@ -1,6 +1,7 @@
 #include "mytextedit.h"
 #include "ui_mytextedit.h"
 #include <QKeyEvent>
+#include <QMessageBox>
 
 MyTextEdit::MyTextEdit(QWidget *parent) :
     QTextEdit(parent),

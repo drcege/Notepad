@@ -15,7 +15,6 @@ Data::~Data()
 
 bool Data::Load(string s)
 {
-    clip = s;
     int i = 0;
     int t = 0;
     bool flag = true;
@@ -73,8 +72,6 @@ bool Data::Load(string s)
         i++;
     }
 
-    delete currentline;
-    delete currentblock;
     return true;
 }
 
@@ -129,9 +126,6 @@ bool Data::Copy(int beg, int end)
             }
         }
     }
-
-    delete currentline;
-    delete currentblock;
     return true;
 }
 
@@ -145,11 +139,11 @@ bool Data::Paste(int l, int c)
     return true;
 }
 
-bool Data::Find(int &l, int &c, string s)
+bool Data::Find(int &pos, string s)
 {
     return true;
 }
-bool Data::Replace(int pos, string src, string dest)
+bool Data::Replace(int beg, int end, string dest)
 {
     return true;
 }
@@ -169,7 +163,6 @@ bool Data::Backspace(int l, int r)
     return true;
 }
 
-
 bool Data::Update(string s, int l, int c)
 {
     return true;
@@ -186,6 +179,17 @@ string Data::Clip()
 
 string Data::Text()
 {
-    s = clip;
+
+    string s("");
+
+    Line *currentline = firstline;
+    Block *currentblock = currentline->nextBlock;
+    while(currentblock != NULL)
+    {
+        for(int i = 0; i < currentblock->l; ++i)
+            s += currentblock->block[i];
+        currentblock = currentblock->nextBlock;
+    }
+
     return s;
 }

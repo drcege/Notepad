@@ -15,7 +15,6 @@ typedef struct Line{
 }Line;
 */
 
-
 struct Block
 {
     char block[80];
@@ -37,8 +36,8 @@ public:
     bool Copy(int beg, int end);            //从文件开头的字符数，左闭右开
     bool Cut(int beg, int end);             //从文件开头的字符数，左闭右开
     bool Paste(int l, int c);               //行数和列数
-    bool Find(int& l, int& c, string s);    //从l，c处开始查找字符串，引用返回查找到位置
-    bool Replace(int pos, string src, string dest);
+    bool Find(int& pos, string s);          //从l，c处开始查找字符串，引用返回查找到位置
+    bool Replace(int beg, int end, string dest);
     bool Delete(int l, int c);              //在l，c处删除后一个字符
     bool Backspace(int l, int r);           //在l，c处删除前一个字符
     bool Enter(int l, int c);               //在l，c处截断形成新行

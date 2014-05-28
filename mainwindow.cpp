@@ -3,6 +3,8 @@
 #include "data.h"
 #include "mytextedit.h"
 #include <QCursor>
+#include <QKeyEvent>
+#include <qobject.h>
 
 bool first_find = true;
 int find_pos;
@@ -13,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->textEdit->data = &data;
+    ui->textEdit->installEventFilter(this);
 
     // 初始化文件为未保存过状态
     isSaved = false;
@@ -24,6 +27,38 @@ MainWindow::MainWindow(QWidget *parent) :
     init_statusBar();
     // 链接
     connect(ui->textEdit,SIGNAL(cursorPositionChanged()),this,SLOT(do_cursorChanged()));
+}
+
+bool MainWindow::eventFilter(QObject* target ,QEvent* event )
+{
+    if(target == ui->textEdit)
+    {
+        if(event->type() == QEvent::KeyPress)
+        {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            if(keyEvent->modifiers() == Qt::ControlModifier)
+            {
+                switch(keyEvent->key())
+                {
+                case Qt::Key_C:
+                    on_action_Copy_triggered();
+                    break;
+                case Qt::Key_V:
+                    on_action_Paste_triggered();
+                    break;
+                case Qt::Key_X:
+                    on_action_Cut_triggered();
+                    break;
+                default:
+                    return false;
+                }
+                //QMessageBox::warning(this, tr("copy"), tr("ctrl c"));
+                return true;
+            }
+
+        }
+    }
+    return false;
 }
 
 // 新建操作
@@ -98,7 +133,9 @@ void MainWindow::on_action_Copy_triggered()
     QTextCursor cursor = ui->textEdit->textCursor();
     if(cursor.hasSelection())
     {
-        if(data.Copy(cursor.selectionStart(), cursor.selectionEnd()))  // 从文本开头计数,左开右闭
+
+        if(1)
+        //if(data.Copy(cursor.selectionStart(), cursor.selectionEnd()))  // 从文本开头计数,左开右闭
             second_statusLabel->setText(tr("复制成功！"));
         else
             second_statusLabel->setText(tr("复制失败！"));
@@ -110,6 +147,8 @@ void MainWindow::on_action_Copy_triggered()
 
     }
     //ui->textEdit->copy();
+
+
 }
 
 // 粘贴操作
@@ -281,10 +320,9 @@ void MainWindow::replace_findText()
     //show_findText();
     if(cur.hasSelection())
     {
-        int pos = cur.selectionStart();
-        data.Replace(pos, findText.toStdString(), replaceText.toStdString());
+        data.Replace(cur.selectionStart(), cur.selectionEnd(), replaceText.toStdString());
         cur.removeSelectedText();
-        cur.insertText(findText);
+        cur.insertText(replaceText);
     }
     else
     {
@@ -447,4 +485,20 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+/*
+void MainWindow::keyPressEvent(QKeyEvent *e)
+{
 
+    if(e->modifiers() == Qt::ControlModifier && e->key()==Qt::Key_C)
+    {
+        QMessageBox::warning(this, tr("copy"), tr("ctrl c"));
+
+        switch(e->key())
+        {
+        case Qt::Key_C:
+            QMessageBox::warning(this, tr("copy"), tr("ctrl c"));
+            break;
+        }
+    }
+}
+*/
