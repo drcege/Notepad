@@ -72,3 +72,4 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
     else
         QTextEdit::keyPressEvent(e);
 }
+

@@ -3,6 +3,7 @@
 #include "data.h"
 #include "mytextedit.h"
 #include <QCursor>
+#include <QTextEdit>
 #include <QKeyEvent>
 #include <qobject.h>
 
@@ -116,14 +117,14 @@ void MainWindow::on_action_Cut_triggered()
     {
         if(data.Cut(cursor.selectionStart(), cursor.selectionEnd()))
         {
-            QString s = "";
-            cursor.insertText(s);
+            //QString s = "Test";
+            //cursor.insertText(s);
+            //ui->textEdit->setTextCursor(cursor);
             second_statusLabel->setText(tr("剪切成功！"));
         }
         else
             second_statusLabel->setText(tr("剪切失败！"));
     }
-    //data.Cut();
     //ui->textEdit->cut();
 }
 
@@ -131,12 +132,15 @@ void MainWindow::on_action_Cut_triggered()
 void MainWindow::on_action_Copy_triggered()
 {
     QTextCursor cursor = ui->textEdit->textCursor();
+
     if(cursor.hasSelection())
     {
-
-        if(1)
-        //if(data.Copy(cursor.selectionStart(), cursor.selectionEnd()))  // 从文本开头计数,左开右闭
-            second_statusLabel->setText(tr("复制成功！"));
+        if(data.Copy(cursor.selectionStart(), cursor.selectionEnd()))  // 从文本开头计数,左开右闭
+        {
+            QString c = QString::fromStdString(data.Clip());
+            second_statusLabel->setText(tr("复制成功！%1").arg(c));
+            //cursor.insertText("Hello World");
+        }
         else
             second_statusLabel->setText(tr("复制失败！"));
 
@@ -157,8 +161,10 @@ void MainWindow::on_action_Paste_triggered()
     QTextCursor cursor = ui->textEdit->textCursor();
     if(data.Paste(cursor.blockNumber(), cursor.columnNumber()))   //光标所在行数和列数
     {
-        cursor.insertText(QString::fromStdString(data.Clip()));
-        second_statusLabel->setText(tr("粘贴成功！"));
+        QString c = QString::fromStdString(data.Clip());
+        cursor.insertText(c);
+        //cursor.insertText("test");
+        second_statusLabel->setText(tr("粘贴成功！%1").arg(c));
     }
     else
         second_statusLabel->setText(tr("粘贴失败！"));
@@ -231,7 +237,7 @@ void MainWindow::on_action_Find_triggered()
 
 
     // 显示对话框
-    findDlg ->show();
+    findDlg->show();
 
     // 设置"查找下一个"按钮的单击事件和其槽函数的关联
     connect(find_Btn,SIGNAL(clicked()),this,SLOT(show_findText()));
@@ -349,8 +355,8 @@ bool MainWindow::saveFile(const QString& fileName)
     // 将文本编辑器里的内容以纯文本的式输出到流对象中
     string all = data.Text();
     //string all = "a\ntest";
-    //out << QString::fromStdString(all);
-    out << ui->textEdit->toPlainText();
+    out << QString::fromStdString(all);
+    //out << ui->textEdit->toPlainText();
 
     // 获得文件的标准路径
     isSaved = true;
@@ -441,14 +447,15 @@ bool MainWindow::do_file_Load(const QString& fileName)
     }
     QTextStream in(&file);
     // 将文件中的所有内容都写到文本编辑器中
-    data.Load(in.readAll().toStdString());
-    ui->textEdit->setText(QString::fromStdString(data.Text()));
-    //ui->textEdit->setText(in.readAll());
+    QString alltext = in.readAll();
+    ui->textEdit->setText(alltext);
+    data.Load(alltext.toStdString());
 
     curFile = QFileInfo(fileName).canonicalFilePath();
     setWindowTitle(curFile);
 
     second_statusLabel->setText(tr("打开文件成功"));
+
     file.close();
 
     return true;
@@ -485,20 +492,3 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-/*
-void MainWindow::keyPressEvent(QKeyEvent *e)
-{
-
-    if(e->modifiers() == Qt::ControlModifier && e->key()==Qt::Key_C)
-    {
-        QMessageBox::warning(this, tr("copy"), tr("ctrl c"));
-
-        switch(e->key())
-        {
-        case Qt::Key_C:
-            QMessageBox::warning(this, tr("copy"), tr("ctrl c"));
-            break;
-        }
-    }
-}
-*/
