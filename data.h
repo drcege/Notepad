@@ -5,14 +5,14 @@ using namespace std;
 
 struct Block
 {
-       char block[80];
-       struct Block *nextBlock;
-       int L;
+    char block[80];
+    struct Block *nextBlock;
+    int L;
 };
 struct Line
 {
-       struct Line *nextLine;
-       struct Block *nextBlock;
+    struct Line *nextLine;
+    struct Block *nextBlock;
 };
 
 
@@ -40,14 +40,15 @@ private:
     Line *firstline;
     string clip;       //ºÙ«–∞Â
 
-    void DELETE_block(Block *currentblock);
-    void INSERT(int t,bool flag,int i,string s,Line* &currentline,Block* &currentblock);
-    int get_pos_block(int c);
-    Line * get_line(int l);
-    Block * get_block(Block *currentblock,int c);
-    int get_pos(int l,int c);
-    void DELETE(Line *deleteline,Block *deleteblock);
-    void DELETE_INSERT(int C,int l,int c,int add,Line * &currentline,Block * &currentblock);
+    int get_block_pos(int x);
+    void create_block(Block * &currentblock);
+    void delete_block(Block *currentblock);
+    void create_line(Line * &currentline);
+    void insert_line(Block *currentblock,  string CLIP,int length);
+    Line* get_line(int l);
+    Block* get_block(Line *currentline, int c);
+    string copy_line(Block *currentblock, int beg, int &l);
+
 
 
 };

@@ -7,7 +7,6 @@
 #include <QKeyEvent>
 #include <qobject.h>
 
-bool first_find = true;
 int find_pos;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -151,8 +150,6 @@ void MainWindow::on_action_Copy_triggered()
 
     }
     //ui->textEdit->copy();
-
-
 }
 
 // 粘贴操作
@@ -212,9 +209,7 @@ void MainWindow::on_action_Find_triggered()
 {
     QTextCursor cur = ui->textEdit->textCursor();
     ui->textEdit->setFocus();
-    cur.setPosition(0);
-
-    first_find = true;
+    //cur.setPosition(0);
 
     // 新建一个对话框，用于查找操作，this表明它的父窗口是MainWindow。
     QDialog *findDlg = new QDialog(this);
@@ -235,7 +230,6 @@ void MainWindow::on_action_Find_triggered()
     layout->addWidget(find_textLineEdit);
     layout->addWidget(find_Btn);
 
-
     // 显示对话框
     findDlg->show();
 
@@ -247,8 +241,6 @@ void MainWindow::on_action_Find_triggered()
 
 void MainWindow::on_action_Replace_triggered()
 {
-    first_find = true;
-
     // 新建一个对话框，用于替换操作，this表明它的父窗口是MainWindow。
     QDialog *replaceDlg = new QDialog(this);
 
@@ -356,7 +348,6 @@ bool MainWindow::saveFile(const QString& fileName)
     string all = data.Text();
     //string all = "a\ntest";
     out << QString::fromStdString(all);
-    //out << ui->textEdit->toPlainText();
 
     // 获得文件的标准路径
     isSaved = true;
@@ -443,7 +434,6 @@ bool MainWindow::do_file_Load(const QString& fileName)
         QMessageBox::warning(this,tr("读取文件"),tr("无法读取  文件 %1:\n%2.").arg(fileName).arg(file.errorString()));
         // 如果打开文件失败，弹出对话框，并返回
         return false;
-
     }
     QTextStream in(&file);
     // 将文件中的所有内容都写到文本编辑器中

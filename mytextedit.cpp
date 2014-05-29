@@ -22,8 +22,8 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
     {
         if((e->key() >= Qt::Key_Space && e->key() <= Qt::Key_AsciiTilde) || e->key() == Qt::Key_Tab)
         {
-            cursor.insertText(e->text());
             data->Update(e->text().toStdString(), cursor.blockNumber(), cursor.columnNumber());
+            cursor.insertText(e->text());
         }
         else
         {
@@ -48,16 +48,16 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     setTextCursor(cursor);
                     break;
                 case Qt::Key_Enter:
-                    cursor.insertText(e->text());
                     data->Enter(cursor.blockNumber(), cursor.columnNumber());
+                    cursor.insertText(e->text());
                     break;
                 case Qt::Key_Delete:
-                    cursor.deleteChar();
                     data->Delete(cursor.blockNumber(), cursor.columnNumber());
+                    cursor.deleteChar();
                     break;
                 case Qt::Key_Backspace:
-                    cursor.deletePreviousChar();
                     data->Backspace(cursor.blockNumber(), cursor.columnNumber());
+                    cursor.deletePreviousChar();
                     break;
                 default:
                     //data->putchar(e->text()[0].unicode()); // TODO: ignore other keys or add more keys
