@@ -16,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->textEdit->data = &data;
     ui->textEdit->installEventFilter(this);
-
     // 初始化文件为未保存过状态
     isSaved = false;
     // 初始化文件名为"未命名.txt"
@@ -26,36 +25,40 @@ MainWindow::MainWindow(QWidget *parent) :
     // 初始化状态栏
     init_statusBar();
     // 链接
-    connect(ui->textEdit,SIGNAL(cursorPositionChanged()),this,SLOT(do_cursorChanged()));
+    connect(ui->textEdit, SIGNAL(cursorPositionChanged()), this, SLOT(do_cursorChanged()));
 }
 
-bool MainWindow::eventFilter(QObject* target ,QEvent* event )
+bool MainWindow::eventFilter(QObject* target , QEvent* event)
 {
-    if(target == ui->textEdit)
+    if (target == ui->textEdit)
     {
-        if(event->type() == QEvent::KeyPress)
+        if (event->type() == QEvent::KeyPress)
         {
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-            if(keyEvent->modifiers() == Qt::ControlModifier)
+
+            if (keyEvent->modifiers() == Qt::ControlModifier)
             {
-                switch(keyEvent->key())
+                switch (keyEvent->key())
                 {
                 case Qt::Key_C:
                     on_action_Copy_triggered();
                     break;
+
                 case Qt::Key_V:
                     on_action_Paste_triggered();
                     break;
+
                 case Qt::Key_X:
                     on_action_Cut_triggered();
                     break;
+
                 default:
                     return false;
                 }
+
                 //QMessageBox::warning(this, tr("copy"), tr("ctrl c"));
                 return true;
             }
-
         }
     }
     return false;
@@ -99,7 +102,6 @@ void MainWindow::on_action_Quit_triggered()
     on_action_Close_triggered();
     // 再退出系统，qApp是指向应用程序的全局指针
     qApp->quit();
-
 }
 
 // 撤销操作
@@ -112,18 +114,23 @@ void MainWindow::on_action_Undo_triggered()
 void MainWindow::on_action_Cut_triggered()
 {
     QTextCursor cursor = ui->textEdit->textCursor();
-    if(cursor.hasSelection())
+
+    if (cursor.hasSelection())
     {
-        if(data.Cut(cursor.selectionStart(), cursor.selectionEnd()))
+        if (data.Cut(cursor.selectionStart(), cursor.selectionEnd()))
         {
             //QString s = "Test";
             //cursor.insertText(s);
             //ui->textEdit->setTextCursor(cursor);
             second_statusLabel->setText(tr("剪切成功！"));
+            ui->textEdit->isModified = true;
         }
         else
+        {
             second_statusLabel->setText(tr("剪切失败！"));
+        }
     }
+
     //ui->textEdit->cut();
 }
 
@@ -132,23 +139,25 @@ void MainWindow::on_action_Copy_triggered()
 {
     QTextCursor cursor = ui->textEdit->textCursor();
 
-    if(cursor.hasSelection())
+    if (cursor.hasSelection())
     {
-        if(data.Copy(cursor.selectionStart(), cursor.selectionEnd()))  // 从文本开头计数,左开右闭
+        if (data.Copy(cursor.selectionStart(), cursor.selectionEnd())) // 从文本开头计数,左开右闭
         {
             QString c = QString::fromStdString(data.Clip());
             second_statusLabel->setText(tr("复制成功！%1").arg(c));
             //cursor.insertText("Hello World");
         }
         else
+        {
             second_statusLabel->setText(tr("复制失败！"));
+        }
 
         //        QString s1 = QString::number(cursor.selectionStart(), 10);
         //        QString s2 = QString::number(cursor.selectionEnd(), 10);
         //        QString s = s1 + " to " + s2;
         //        second_statusLabel->setText(s);
-
     }
+
     //ui->textEdit->copy();
 }
 
@@ -156,15 +165,20 @@ void MainWindow::on_action_Copy_triggered()
 void MainWindow::on_action_Paste_triggered()
 {
     QTextCursor cursor = ui->textEdit->textCursor();
-    if(data.Paste(cursor.blockNumber(), cursor.columnNumber()))   //光标所在行数和列数
+
+    if (data.Paste(cursor.blockNumber(), cursor.columnNumber()))  //光标所在行数和列数
     {
         QString c = QString::fromStdString(data.Clip());
         cursor.insertText(c);
         //cursor.insertText("test");
         second_statusLabel->setText(tr("粘贴成功！%1").arg(c));
+        ui->textEdit->isModified = true;
     }
     else
+    {
         second_statusLabel->setText(tr("粘贴失败！"));
+    }
+
     //ui->textEdit->paste();
 }
 
@@ -175,20 +189,19 @@ void MainWindow::init_statusBar()
     // 新建标签
     first_statusLabel = new QLabel;
     // 设置标签最小尺寸
-    first_statusLabel->setMinimumSize(150,20);
+    first_statusLabel->setMinimumSize(150, 20);
     // 设置标签形状
     first_statusLabel->setFrameShape(QFrame::WinPanel);
     // 设置标签阴影
     first_statusLabel->setFrameShadow(QFrame::Sunken);
     second_statusLabel = new QLabel;
-    second_statusLabel->setMinimumSize(150,20);
+    second_statusLabel->setMinimumSize(150, 20);
     second_statusLabel->setFrameShape(QFrame::WinPanel);
     second_statusLabel->setFrameShadow(QFrame::Sunken);
     bar->addWidget(first_statusLabel);
     bar->addWidget(second_statusLabel);
     first_statusLabel->setText(tr("欢迎使用"));
     //second_statusLabel->setText(tr("戈策制作!"));
-
 }
 
 void MainWindow::do_cursorChanged()
@@ -210,31 +223,28 @@ void MainWindow::on_action_Find_triggered()
     QTextCursor cur = ui->textEdit->textCursor();
     ui->textEdit->setFocus();
     //cur.setPosition(0);
-
     // 新建一个对话框，用于查找操作，this表明它的父窗口是MainWindow。
     QDialog *findDlg = new QDialog(this);
     // 设置对话框的标题
     findDlg->setWindowTitle(tr("查找"));
     // 将行编辑器加入到新建的查找对话框中
     find_textLineEdit = new QLineEdit(findDlg);
-    if(cur.hasSelection())
+
+    if (cur.hasSelection())
     {
         find_textLineEdit->setText(cur.selectedText());
     }
 
     // 加入一个"查找下一个"的按钮
-    QPushButton *find_Btn = new QPushButton(tr("查找下一个"),findDlg);
-
+    QPushButton *find_Btn = new QPushButton(tr("查找下一个"), findDlg);
     // 新建一个垂直布局管理器，并将行编辑器和按钮加入其中
     QVBoxLayout* layout = new QVBoxLayout(findDlg);
     layout->addWidget(find_textLineEdit);
     layout->addWidget(find_Btn);
-
     // 显示对话框
     findDlg->show();
-
     // 设置"查找下一个"按钮的单击事件和其槽函数的关联
-    connect(find_Btn,SIGNAL(clicked()),this,SLOT(show_findText()));
+    connect(find_Btn, SIGNAL(clicked()), this, SLOT(show_findText()));
 }
 
 
@@ -243,39 +253,30 @@ void MainWindow::on_action_Replace_triggered()
 {
     // 新建一个对话框，用于替换操作，this表明它的父窗口是MainWindow。
     QDialog *replaceDlg = new QDialog(this);
-
     replaceDlg->setWindowTitle(tr("替换"));    // 设置对话框的标题
-
     find_textLineEdit = new QLineEdit(replaceDlg);    // 将行编辑器加入到新建的替换对话框中
     replace_textLineEdit = new QLineEdit(replaceDlg);
-
-    QPushButton *find_Btn = new QPushButton(tr("查找下一个"),replaceDlg);   // 加入一个"查找下一个"的按钮
-    QPushButton *replace_Btn = new QPushButton(tr("替换"),replaceDlg);
-
+    QPushButton *find_Btn = new QPushButton(tr("查找下一个"), replaceDlg);  // 加入一个"查找下一个"的按钮
+    QPushButton *replace_Btn = new QPushButton(tr("替换"), replaceDlg);
     QVBoxLayout* layout1 = new QVBoxLayout();     // 新建一个垂直布局管理器，并将行编辑器和按钮加入其中
     layout1->addWidget(find_textLineEdit);
     layout1->addWidget(replace_textLineEdit);
-
     QVBoxLayout* layout2 = new QVBoxLayout();
     layout2->addWidget(find_Btn);
     layout2->addWidget(replace_Btn);
-
     QHBoxLayout* layout = new QHBoxLayout(replaceDlg);   // 新建一个水平布局管理器
     layout->addLayout(layout1);
     layout->addLayout(layout2);
-
     replaceDlg ->show();    // 显示对话框
-
     // 设置"替换"按钮的单击事件和其槽函数的关联
-    connect(find_Btn,SIGNAL(clicked()),this,SLOT(show_findText()));
-    connect(replace_Btn,SIGNAL(clicked()),this,SLOT(replace_findText()));
+    connect(find_Btn, SIGNAL(clicked()), this, SLOT(show_findText()));
+    connect(replace_Btn, SIGNAL(clicked()), this, SLOT(replace_findText()));
 }
 
 
 // "查找下一个"按钮的槽函数
 void MainWindow::show_findText()
 {
-
     // 获取行编辑器中的内容
     QString findText = find_textLineEdit->text();
     QTextCursor cur = ui->textEdit->textCursor();
@@ -296,11 +297,11 @@ void MainWindow::show_findText()
     {
         QMessageBox::warning(this,tr("查找"),tr("未找到 %1").arg(findText));
     }
-*/
+    */
 
-    if(!ui->textEdit->find(findText,QTextDocument::FindBackward))
+    if (!ui->textEdit->find(findText, QTextDocument::FindBackward))
     {
-        QMessageBox::warning(this,tr("查找"),tr("未找到 %1").arg(findText));
+        QMessageBox::warning(this, tr("查找"), tr("未找到 %1").arg(findText));
     }
     else
     {
@@ -313,10 +314,10 @@ void MainWindow::replace_findText()
 {
     QString findText = find_textLineEdit->text();
     QString replaceText = replace_textLineEdit->text();
-
     QTextCursor cur = ui->textEdit->textCursor();
+
     //show_findText();
-    if(cur.hasSelection())
+    if (cur.hasSelection())
     {
         data.Replace(cur.selectionStart(), cur.selectionEnd(), replaceText.toStdString());
         cur.removeSelectedText();
@@ -324,9 +325,8 @@ void MainWindow::replace_findText()
     }
     else
     {
-        QMessageBox::warning(this,tr("替换"),tr("未找到 %1").arg(findText));
+        QMessageBox::warning(this, tr("替换"), tr("未找到 %1").arg(findText));
     }
-
 }
 
 // 保存文件内容，因为可能保存失败，所以具有返回值，来表明是否保存成功
@@ -335,29 +335,28 @@ bool MainWindow::saveFile(const QString& fileName)
     QFile file(fileName);
 
     // 以只写方式打开文件，如果打开失败则弹出提示框并返回
-    if(!file.open(QFile::WriteOnly | QFile::Text))
+    if (!file.open(QFile::WriteOnly | QFile::Text))
     {
         // %1,%2表示后面的两个arg参数的值
-        QMessageBox::warning(this,tr("保存文件"),
+        QMessageBox::warning(this, tr("保存文件"),
                              tr("无法保存文件 %1:\n %2").arg(fileName).arg(file.errorString()));
         return false;
     }
+
     // 新建流对象，指向选定的文件
     QTextStream out(&file);
     // 将文本编辑器里的内容以纯文本的式输出到流对象中
     string all = data.Text();
     //string all = "a\ntest";
     out << QString::fromStdString(all);
-
-    // 获得文件的标准路径
     isSaved = true;
+    ui->textEdit->isModified = false;
+    // 获得文件的标准路径
     curFile = QFileInfo(fileName).canonicalFilePath();
     // 将窗口名称改为现在窗口的路径
     setWindowTitle(curFile);
-
     second_statusLabel->setText(tr("保存文件成功"));
     file.close();
-
     return true;
 }
 
@@ -365,9 +364,10 @@ bool MainWindow::saveFile(const QString& fileName)
 void MainWindow::do_file_SaveAs()
 {
     // 获得文件名
-    QString fileName = QFileDialog::getSaveFileName(this,tr("另存为"),curFile);
+    QString fileName = QFileDialog::getSaveFileName(this, tr("另存为"), curFile);
+
     // 如果文件名不为空，则保存文件内容
-    if(!fileName.isEmpty())
+    if (!fileName.isEmpty())
     {
         saveFile(fileName);
     }
@@ -377,7 +377,7 @@ void MainWindow::do_file_SaveAs()
 void MainWindow::do_file_Save()
 {
     // 如果文件已经被保存过，直接保存文件
-    if(isSaved)
+    if (isSaved)
     {
         saveFile(curFile);
     }
@@ -385,7 +385,6 @@ void MainWindow::do_file_Save()
     else
     {
         do_file_SaveAs();
-
     }
 }
 
@@ -393,15 +392,16 @@ void MainWindow::do_file_Save()
 void MainWindow::do_file_SaveOrNot()
 {
     // 如果文件被更改过，弹出保存对话框
-    if(ui->textEdit->document()->isModified())
+    if (ui->textEdit->isModified)
     {
         QMessageBox box;
         box.setWindowTitle(tr("警告"));
         box.setIcon(QMessageBox::Warning);
         box.setText(curFile + tr("尚未保存，是否保存?"));
         box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+
         // 如果选择保存文件，则执行保存操作
-        if(box.exec() == QMessageBox::Yes)
+        if (box.exec() == QMessageBox::Yes)
         {
             do_file_Save();
         }
@@ -415,39 +415,38 @@ void MainWindow::do_file_Open()
     do_file_SaveOrNot();
     // 获得要打开的文件的名字
     QString fileName = QFileDialog::getOpenFileName(this);
+
     // 如果文件名不为空
-    if(!fileName.isEmpty())
+    if (!fileName.isEmpty())
     {
         do_file_Load(fileName);
     }
+
     // 文本编辑器可见
     ui->textEdit->setVisible(true);
-
 }
 
 // 读取文件
 bool MainWindow::do_file_Load(const QString& fileName)
 {
     QFile file(fileName);
-    if(!file.open(QFile::ReadOnly | QFile::Text))
+
+    if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        QMessageBox::warning(this,tr("读取文件"),tr("无法读取  文件 %1:\n%2.").arg(fileName).arg(file.errorString()));
+        QMessageBox::warning(this, tr("读取文件"), tr("无法读取  文件 %1:\n%2.").arg(fileName).arg(file.errorString()));
         // 如果打开文件失败，弹出对话框，并返回
         return false;
     }
+
     QTextStream in(&file);
     // 将文件中的所有内容都写到文本编辑器中
     QString alltext = in.readAll();
     ui->textEdit->setText(alltext);
     data.Load(alltext.toStdString());
-
     curFile = QFileInfo(fileName).canonicalFilePath();
     setWindowTitle(curFile);
-
     second_statusLabel->setText(tr("打开文件成功"));
-
     file.close();
-
     return true;
 }
 
@@ -459,10 +458,8 @@ void MainWindow::do_file_New()
     curFile = tr("未命名.txt");
     setWindowTitle(curFile);
     // 清空文本编辑器
-
     ui->textEdit->clear();
     data.Clear();
-
     // 文本编辑器可见
     ui->textEdit->setVisible(true);
 }

@@ -5,7 +5,8 @@
 #include <QTextEdit>
 #include "data.h"
 
-namespace Ui {
+namespace Ui
+{
 class MyTextEdit;
 }
 
@@ -19,6 +20,7 @@ public:
 
 public:
     Data *data;
+    bool isModified;
     void keyPressEvent(QKeyEvent *e);
 
 private:

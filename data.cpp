@@ -9,12 +9,11 @@ using namespace std;
 
 Data::Data()
 {
-    firstline=NULL;
+    firstline = NULL;
 }
 
 Data::~Data()
 {
-
 }
 
 bool Data::Load(string s)
@@ -68,6 +67,7 @@ bool Data::Load(string s)
         {
             t = 0;
         }
+
         i++;
     }
 
@@ -94,7 +94,7 @@ bool Data::Find(int& pos, string src, string dest)    //从l，c处开始查找字符串，
     return true;
 }
 
-bool Data::Replace(int beg,int end, string s)
+bool Data::Replace(int beg, int end, string s)
 {
     return true;
 }
@@ -109,8 +109,68 @@ bool Data::Backspace(int l, int c)           //在l，c处删除前一个字符
     return true;
 }
 
-bool Data::Enter(int l, int c)               //在l，c处截断形成新行
+bool Data::Enter(int l, int c)
 {
+    QFile f("debug.txt");
+    f.open(QFile::Append | QFile::Text);
+    QTextStream debug(&f);
+    debug << l << ' ' << c << '\n';
+    Block *currentblock = NULL;
+    Line *currentline = NULL;
+    int length = 0;
+    currentline = get_line(l);
+    currentblock = get_block(currentline, c);
+    string CLIP = copy_line(currentblock, c, length);
+    delete_block(currentblock->nextBlock);
+    currentblock->L = get_block_pos(c) + 1;
+    currentblock->block[currentblock->L - 1] = '\n';
+    Line *temp = currentline->nextLine;
+    currentline->nextLine = NULL;
+    create_line(currentline);
+    currentline = currentline->nextLine;
+    currentline->nextLine = temp;
+    currentblock = currentline->nextBlock;
+
+    if (currentblock == NULL && length != 0)
+    {
+        currentline->nextBlock = new Block;
+        currentblock = currentline->nextBlock;
+        currentblock->L = 0;
+        currentblock->nextBlock = NULL;
+    }
+
+    insert_line(currentblock, CLIP, length);
+    return true;
+}
+
+bool Data::Update(string s, int l, int c)
+{
+    /*
+        QFile f("debug.txt");
+        f.open(QFile::Append | QFile::Text);
+        QTextStream debug(&f);
+
+        debug << l << ' ' << c << '\n';
+    */
+    int length = 0;
+    string CLIP = "";
+    Block *currentblock = NULL;
+    Line *currentline = NULL;
+    currentline = get_line(l);
+    currentblock = get_block(currentline, c);
+    CLIP = copy_line(currentblock, c, length);
+    delete_block(currentblock->nextBlock);
+    currentblock->L = get_block_pos(c);
+    CLIP = s + CLIP;
+
+    if (length == 0)
+    {
+        CLIP = s;
+    }
+
+    length++;
+    insert_line(currentblock, CLIP, length);
+    //f.close();
     return true;
 }
 
@@ -128,18 +188,20 @@ string Data::Text()
 {
     string CLIP;
 
-    for(Line *currentline = firstline; currentline!=NULL; currentline=currentline->nextLine)
+    for (Line *currentline = firstline; currentline != NULL; currentline = currentline->nextLine)
     {
-        for(Block *currentblock=currentline->nextBlock; currentblock!=NULL; currentblock=currentblock->nextBlock)
+        for (Block *currentblock = currentline->nextBlock; currentblock != NULL; currentblock = currentblock->nextBlock)
         {
-            for(int i=0; i<currentblock->L; ++i)
+            for (int i = 0; i < currentblock->L; ++i)
             {
-                CLIP+=currentblock->block[i];
+                CLIP += currentblock->block[i];
             }
         }
     }
+
     return CLIP;
 }
+
 
 
 void Data::create_line(Line * &currentline)
@@ -171,6 +233,56 @@ Line* Data::get_line(int l)
     }
 
     return currentline;
+}
+
+string Data::copy_line(Block *currentblock, int beg, int &le)
+{
+    string CLIP = "";
+    beg = get_block_pos(beg);
+
+    for (int i = beg; i < currentblock->L; i++)
+    {
+        le++;
+        CLIP += currentblock->block[i];
+    }
+
+    currentblock = currentblock->nextBlock;
+
+    while (currentblock != NULL)
+    {
+        for (int i = 0; i < currentblock->L; i++)
+        {
+            le++;
+            CLIP += currentblock->block[i];
+        }
+    }
+
+    //second_statusLabel->setText(tr(CLIP));
+    //ui->textEdit->setText(CLIP);
+    return CLIP;
+}
+
+void Data::insert_line(Block *currentblock, string CLIP, int length)
+{
+    int i = 0;
+
+    while (i < length)
+    {
+        currentblock->block[currentblock->L] = CLIP[i];
+        currentblock->L++;
+
+        if (currentblock->L == 80)
+        {
+            if (currentblock->nextBlock == NULL)
+            {
+                create_block(currentblock);
+            }
+
+            currentblock = currentblock->nextBlock;
+        }
+
+        i++;
+    }
 }
 
 void Data::create_block(Block * &currentblock)
@@ -205,66 +317,6 @@ Block* Data::get_block(Line *currentline, int c)
     return currentblock;
 }
 
-int Data::get_block_pos(int x)
-{
-    while (x >= 80)x -= 80;
-
-    return x;
-}
-
-string Data::copy_line(Block *currentblock, int beg, int &le)
-{
-    string CLIP = "";
-    beg = get_block_pos(beg);
-
-    for (int i = beg; i < currentblock->L; i++)
-    {
-        le++;
-        CLIP += currentblock->block[i];
-    }
-
-    currentblock = currentblock->nextBlock;
-
-    while (currentblock != NULL)
-    {
-        for (int i = 0; i < currentblock->L; i++)
-        {
-            le++;
-            CLIP += currentblock->block[i];
-        }
-    }
-    //second_statusLabel->setText(tr(CLIP));
-    //ui->textEdit->setText(CLIP);
-    return CLIP;
-}
-
-void Data::insert_line(Block *currentblock,string CLIP,int length)
-{
-
-    int i = 0;
-
-    while (i < length)
-    {
-
-        currentblock->block[currentblock->L] = CLIP[i];
-
-        currentblock->L++;
-
-        if (currentblock->L == 80)
-        {
-            if (currentblock->nextBlock == NULL)
-            {
-                create_block(currentblock);
-            }
-
-            currentblock = currentblock->nextBlock;
-        }
-
-        i++;
-    }
-
-}
-
 void Data::delete_block(Block *currentblock)
 {
     if (currentblock != NULL)
@@ -273,22 +325,13 @@ void Data::delete_block(Block *currentblock)
         delete(currentblock);
     }
 }
-bool Data::Update(string s, int l, int c)
+
+int Data::get_block_pos(int x)
 {
-    int length = 0;
-    string CLIP="";
-    Block *currentblock = NULL;
-    Line *currentline = NULL;
-    currentline = get_line(l);
-    currentblock = get_block(currentline, c);
-    CLIP = copy_line(currentblock, c, length);
-    delete_block(currentblock->nextBlock);
-    currentblock->L = get_block_pos(c);
+    while (x >= 80)
+    {
+        x -= 80;
+    }
 
-    CLIP = s + CLIP;
-    if(length==0)CLIP=s;
-    length++;
-    insert_line(currentblock, CLIP,length);
-
-    return true;
+    return x;
 }

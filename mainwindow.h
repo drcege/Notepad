@@ -24,7 +24,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    bool eventFilter(QObject*,QEvent*);
+    bool eventFilter(QObject*, QEvent*);
 
 private slots:
 
