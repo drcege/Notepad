@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>448</width>
-    <height>385</height>
+    <width>650</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,6 +18,11 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
   </property>
   <property name="contextMenuPolicy">
    <enum>Qt::NoContextMenu</enum>
@@ -29,11 +34,26 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="MyTextEdit" name="textEdit">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="focusPolicy">
        <enum>Qt::StrongFocus</enum>
       </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::DefaultContextMenu</enum>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
       <property name="lineWrapMode">
-       <enum>QTextEdit::WidgetWidth</enum>
+       <enum>QTextEdit::NoWrap</enum>
       </property>
      </widget>
     </item>
@@ -44,8 +64,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>448</width>
-     <height>22</height>
+     <width>650</width>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_F">
@@ -152,6 +172,10 @@
    </property>
   </action>
   <action name="action_SaveAs">
+   <property name="icon">
+    <iconset resource="mainwindow.qrc">
+     <normaloff>:/images/images/saveas.png</normaloff>:/images/images/saveas.png</iconset>
+   </property>
    <property name="text">
     <string>另存为(&amp;A)</string>
    </property>
@@ -225,6 +249,10 @@
    </property>
   </action>
   <action name="action_Find">
+   <property name="icon">
+    <iconset resource="mainwindow.qrc">
+     <normaloff>:/images/images/find.png</normaloff>:/images/images/find.png</iconset>
+   </property>
    <property name="text">
     <string>查找(&amp;F)</string>
    </property>
@@ -233,6 +261,10 @@
    </property>
   </action>
   <action name="action_Author">
+   <property name="icon">
+    <iconset resource="mainwindow.qrc">
+     <normaloff>:/images/images/about.png</normaloff>:/images/images/about.png</iconset>
+   </property>
    <property name="text">
     <string>关于(&amp;F&amp;1&amp;2)</string>
    </property>
@@ -241,8 +273,15 @@
    </property>
   </action>
   <action name="action_Replace">
+   <property name="icon">
+    <iconset resource="mainwindow.qrc">
+     <normaloff>:/images/images/replace.png</normaloff>:/images/images/replace.png</iconset>
+   </property>
    <property name="text">
     <string>替换(&amp;R)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
  </widget>

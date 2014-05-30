@@ -24,6 +24,11 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
     {
         if ((e->key() >= Qt::Key_Space && e->key() <= Qt::Key_AsciiTilde) || e->key() == Qt::Key_Tab)
         {
+            if(cursor.hasSelection())
+            {
+                data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
+                cursor.removeSelectedText();
+            }
             data->Update(e->text().toStdString(), cursor.blockNumber(), cursor.columnNumber());
             cursor.insertText(e->text());
             isModified = true;
@@ -56,20 +61,41 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     break;
 
                 case Qt::Key_Return:
+                    if(cursor.hasSelection())
+                    {
+                        data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
+                        cursor.removeSelectedText();
+                    }
                     data->Enter(cursor.blockNumber(), cursor.columnNumber());
                     cursor.insertText(e->text());
                     isModified = true;
                     break;
 
                 case Qt::Key_Delete:
-                    data->Delete(cursor.blockNumber(), cursor.columnNumber());
-                    cursor.deleteChar();
+                    if(cursor.hasSelection())
+                    {
+                        data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
+                        cursor.removeSelectedText();
+                    }
+                    else
+                    {
+                        data->Delete(cursor.blockNumber(), cursor.columnNumber());
+                        cursor.deleteChar();
+                    }
                     isModified = true;
                     break;
 
                 case Qt::Key_Backspace:
-                    data->Backspace(cursor.blockNumber(), cursor.columnNumber());
-                    cursor.deletePreviousChar();
+                    if(cursor.hasSelection())
+                    {
+                        data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
+                        cursor.removeSelectedText();
+                    }
+                    else
+                    {
+                        data->Backspace(cursor.blockNumber(), cursor.columnNumber());
+                        cursor.deletePreviousChar();
+                    }
                     isModified = true;
                     break;
 

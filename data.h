@@ -29,7 +29,7 @@ public:
     bool Copy(int beg, int end);            //从文件开头的字符数，左闭右开
     bool Cut(int beg, int end);             //从文件开头的字符数，左闭右开
     bool Paste(int l, int c);               //行数和列数
-    bool Find(int& pos, string src, string dest);    //从l，c处开始查找字符串，引用返回查找到位置
+    bool Find(int& pos, string s);          //从文件开头的字符数,开始查找字符串，引用返回查找到位置
     bool Replace(int beg, int end, string s);
     bool Delete(int l, int c);              //在l，c处删除后一个字符
     bool Backspace(int l, int c);           //在l，c处删除前一个字符
@@ -43,6 +43,7 @@ private:
     Line *firstline;
     string clip;       //剪切板
 
+    bool END(int l,int c);
     int get_block_pos(int x);
     void create_block(Block * &currentblock);
     void delete_block(Block *currentblock);
@@ -51,6 +52,7 @@ private:
     Line* get_line(int l);
     Block* get_block(Line *currentline, int c);
     string copy_line(Block *currentblock, int beg, int &l);
+    void find_pos(int pos, int &x, int &y);
 
 
 

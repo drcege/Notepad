@@ -54,11 +54,12 @@ private:
     bool isSaved;
     //用于保存当前文件的文件名
     QString curFile;
+    QStatusBar* bar;
     QLineEdit *find_textLineEdit;
     QLineEdit *replace_textLineEdit;
     //声明两个标签，用来显示状态信息
-    QLabel* first_statusLabel;
-    QLabel* second_statusLabel;
+    //QLabel* first_statusLabel;
+    //QLabel* second_statusLabel;
     //初始化状态栏函数
     void init_statusBar();
     //新建文件函数

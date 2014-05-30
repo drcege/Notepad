@@ -74,22 +74,138 @@ bool Data::Load(string s)
     return true;
 }
 
-bool Data::Copy(int beg, int end)            //从文件开头的字符数，左闭右开
+bool Data::Copy(int beg, int end)
 {
+    QFile f("debug.txt");
+    f.open(QFile::Append | QFile::Text);
+    QTextStream debug(&f);
+
+    int sl = 0, sc = 0, el = 0, ec = 0;
+    find_pos(beg, sl, sc);
+    find_pos(end-1, el, ec);
+    Line *currentline=get_line(sl);
+    clip = "";
+    Block *currentblock=get_block(currentline,sc);
+    if(sl==el)
+    {
+        int t=get_block_pos(sc);
+        for(int i=sc;i<=ec;i++)
+        {
+            clip+=currentblock->block[t];
+            t++;
+            if(t==80)
+            {
+                t=0;
+                currentblock=currentblock->nextBlock;
+            }
+        }
+    }
+    else
+    {
+        int length=0;
+        clip+=copy_line(currentblock,sc,length);
+        currentline=currentline->nextLine;
+        currentblock=currentline->nextBlock;
+        for(int i=sl+1;i<=(el-1);i++)
+        {
+            while(currentblock!=NULL)
+            {
+                for(int j=0;j<currentblock->L;j++)clip+=currentblock->block[j];
+                currentblock=currentblock->nextBlock;
+            }
+            currentline=currentline->nextLine;
+            currentblock=currentline->nextBlock;
+        }
+        int t=0;
+        for(int i=0;i<=ec;i++)
+        {
+            clip+=currentblock->block[t];
+            t++;
+            if(t==80)
+            {
+                t=0;
+                currentblock=currentblock->nextBlock;
+            }
+        }
+    }
+
+    debug << beg << ' ' << end << ' ' << sl << ' ' << sc << ' ' << el << ' ' << ec <<' '<< '\n';
+    //debug<<clip[0]<<clip[1]<<clip[2]<<clip[3]<<clip[4]<<clip[5]<<clip[6]<<clip[7]<<clip[8];
+    f.close();
+
     return true;
 }
 
-bool Data::Cut(int beg, int end)             //从文件开头的字符数，左闭右开
+void Data::find_pos(int pos, int &x, int &y)
 {
-    return true;
+    Line *currentline = firstline;
+    Block *currentblock = firstline->nextBlock;
+    int t = 0;
+    int before_t = 0;
+    pos++;
+    bool flag = true;
+
+    while (flag)
+    {
+        while (currentblock != NULL)
+        {
+            t += currentblock->L;
+
+            if (t >= pos)
+            {
+                y = pos - before_t - 1;
+                flag = false;
+                break;
+            }
+
+            currentblock = currentblock->nextBlock;
+        }
+        if(!flag)break;
+        x++;
+        before_t = t;
+        currentline = currentline->nextLine;
+        currentblock = currentline->nextBlock;
+    }
 }
 
-bool Data::Paste(int l, int c)               //行数和列数
+bool Data::Cut(int beg,int end)
 {
-    return true;
+    bool flag=Copy(beg,end);
+    int l=0,c=0;
+    find_pos(beg,l,c);
+    for(int i=beg;i<end;i++)
+    {
+        flag=flag&&Delete(l,c);
+    }
+    return flag;
 }
 
-bool Data::Find(int& pos, string src, string dest)    //从l，c处开始查找字符串，引用返回查找到位置
+bool Data::Paste(int l,int c)
+{
+    int i=0;
+    bool flag=true;
+    while(clip[i]!='\0')
+    {
+        if(clip[i]=='\n')
+        {
+            flag=flag&&Enter(l,c);
+            l++;
+            c=0;
+        }
+        else
+        {
+            string s="";
+            s+=clip[i];
+            flag=flag&&Update(s,l,c);
+            c++;
+        }
+        i++;
+    }
+    return flag;
+}
+
+
+bool Data::Find(int& pos, string s)
 {
     return true;
 }
@@ -99,22 +215,82 @@ bool Data::Replace(int beg, int end, string s)
     return true;
 }
 
-bool Data::Delete(int l, int c)              //在l，c处删除后一个字符
+bool Data::Delete(int l, int c)
 {
+    /*if(Data::END(l,c))
+    {
+        return true;
+    }*/
+    Block *currentblock = NULL;
+    Line *currentline = NULL;
+    currentline = get_line(l);
+    currentblock = get_block(currentline, c);
+    int C = get_block_pos(c);
+    if (currentblock->nextBlock == NULL && currentline->nextLine == NULL && currentblock->L == (C + 1))
+    {
+        if(currentblock->L!=0)currentblock->L--;
+        return true;
+    }
+    if (currentblock->nextBlock == NULL && currentblock->L == (C + 1))
+    {
+        Line *temp = currentline->nextLine;
+        int length = 0;
+        string CLIP = "";
+        if(temp->nextBlock!=NULL)CLIP=copy_line(temp->nextBlock, 0, length);
+        currentblock->L=C;
+        insert_line(currentblock, CLIP, length);
+        currentline->nextLine = temp->nextLine;
+        //delete(temp);
+    }
+    else
+    {
+        int length = 0;
+        Block *temp = get_block(currentline, c +1 );
+        string CLIP = copy_line(temp, c +1, length);
+        delete_block(currentblock->nextBlock);
+        currentblock->nextBlock=NULL;
+        (currentblock->L)=C;
+        insert_line(currentblock, CLIP, length);
+    }
+
     return true;
 }
 
-bool Data::Backspace(int l, int c)           //在l，c处删除前一个字符
+bool Data::Backspace(int l, int c)
 {
-    return true;
+    //Block *currentblock = NULL;
+    Line *currentline = NULL;
+
+    if (l == 0 && c == 0)
+    {
+        return true;
+    }
+
+    if (c != 0)
+    {
+        return Data::Delete(l, c - 1);
+    }
+
+    l--;
+    currentline = get_line(l);
+    int C = 0;
+
+    for (Block* temp = currentline->nextBlock; temp != NULL; temp = temp->nextBlock)
+    {
+        C += temp->L;
+    }
+
+    return Data::Delete(l, C-1);
 }
+
 
 bool Data::Enter(int l, int c)
 {
-    QFile f("debug.txt");
+/*    QFile f("debug.txt");
     f.open(QFile::Append | QFile::Text);
     QTextStream debug(&f);
     debug << l << ' ' << c << '\n';
+  */
     Block *currentblock = NULL;
     Line *currentline = NULL;
     int length = 0;
@@ -122,7 +298,8 @@ bool Data::Enter(int l, int c)
     currentblock = get_block(currentline, c);
     string CLIP = copy_line(currentblock, c, length);
     delete_block(currentblock->nextBlock);
-    currentblock->L = get_block_pos(c) + 1;
+    currentblock->nextBlock=NULL;
+    currentblock->L = get_block_pos(c) +1;
     currentblock->block[currentblock->L - 1] = '\n';
     Line *temp = currentline->nextLine;
     currentline->nextLine = NULL;
@@ -160,6 +337,7 @@ bool Data::Update(string s, int l, int c)
     currentblock = get_block(currentline, c);
     CLIP = copy_line(currentblock, c, length);
     delete_block(currentblock->nextBlock);
+    currentblock->nextBlock=NULL;
     currentblock->L = get_block_pos(c);
     CLIP = s + CLIP;
 
@@ -255,6 +433,7 @@ string Data::copy_line(Block *currentblock, int beg, int &le)
             le++;
             CLIP += currentblock->block[i];
         }
+        currentblock=currentblock->nextBlock;
     }
 
     //second_statusLabel->setText(tr(CLIP));
@@ -268,9 +447,6 @@ void Data::insert_line(Block *currentblock, string CLIP, int length)
 
     while (i < length)
     {
-        currentblock->block[currentblock->L] = CLIP[i];
-        currentblock->L++;
-
         if (currentblock->L == 80)
         {
             if (currentblock->nextBlock == NULL)
@@ -280,7 +456,8 @@ void Data::insert_line(Block *currentblock, string CLIP, int length)
 
             currentblock = currentblock->nextBlock;
         }
-
+        currentblock->block[currentblock->L] = CLIP[i];
+        currentblock->L++;
         i++;
     }
 }
@@ -335,3 +512,25 @@ int Data::get_block_pos(int x)
 
     return x;
 }
+
+/*bool Data::END(int l,int c)
+{
+    int finall=0;
+    int finalb=0;
+    Line *currentline=firstline;
+    if(firstline==NULL)return true;
+    while(currentline!=NULL)
+    {
+        finall++;
+        currentline=currentline->nextLine;
+    }
+    if((l+1)>finall)return true;
+    Block *currentblock=currentline->nextBlock;
+    while(currentblock!=NULL)
+    {
+        finalb+=currentblock->L;
+        currentblock=currentblock->nextBlock;
+    }
+    if((c+1)>finalb)return true;
+    return false;
+}*/

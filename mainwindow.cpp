@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "data.h"
 #include "mytextedit.h"
+#include <QMovie>
 #include <QCursor>
 #include <QTextEdit>
 #include <QKeyEvent>
@@ -93,6 +94,7 @@ void MainWindow::on_action_Close_triggered()
 {
     do_file_SaveOrNot();
     ui->textEdit->setVisible(false);
+    bar->clearMessage();
 }
 
 // 退出操作
@@ -119,18 +121,19 @@ void MainWindow::on_action_Cut_triggered()
     {
         if (data.Cut(cursor.selectionStart(), cursor.selectionEnd()))
         {
-            //QString s = "Test";
-            //cursor.insertText(s);
-            //ui->textEdit->setTextCursor(cursor);
-            second_statusLabel->setText(tr("剪切成功！"));
+            QString s = "";
+            cursor.insertText(s);
+            ui->textEdit->setTextCursor(cursor);
+            bar->showMessage(bar->currentMessage() + tr("    剪切成功！"));
+            //second_statusLabel->setText(tr("剪切成功！"));
             ui->textEdit->isModified = true;
         }
         else
         {
-            second_statusLabel->setText(tr("剪切失败！"));
+            bar->showMessage(bar->currentMessage() + tr("    剪切失败"));
+            //second_statusLabel->setText(tr("剪切失败！"));
         }
     }
-
     //ui->textEdit->cut();
 }
 
@@ -143,13 +146,15 @@ void MainWindow::on_action_Copy_triggered()
     {
         if (data.Copy(cursor.selectionStart(), cursor.selectionEnd())) // 从文本开头计数,左开右闭
         {
-            QString c = QString::fromStdString(data.Clip());
-            second_statusLabel->setText(tr("复制成功！%1").arg(c));
+            bar->showMessage(bar->currentMessage() + tr("    复制成功"));
+            //QString c = QString::fromStdString(data.Clip());
+            //second_statusLabel->setText(tr("复制成功！"));
             //cursor.insertText("Hello World");
         }
         else
         {
-            second_statusLabel->setText(tr("复制失败！"));
+            bar->showMessage(bar->currentMessage() + tr("    复制失败"));
+            //second_statusLabel->setText(tr("复制失败！"));
         }
 
         //        QString s1 = QString::number(cursor.selectionStart(), 10);
@@ -168,15 +173,16 @@ void MainWindow::on_action_Paste_triggered()
 
     if (data.Paste(cursor.blockNumber(), cursor.columnNumber()))  //光标所在行数和列数
     {
-        QString c = QString::fromStdString(data.Clip());
-        cursor.insertText(c);
-        //cursor.insertText("test");
-        second_statusLabel->setText(tr("粘贴成功！%1").arg(c));
+        QString qs = QString::fromStdString(data.Clip());
+        cursor.insertText(qs);
+        bar->showMessage(bar->currentMessage() + tr("    粘贴成功"));
+        //second_statusLabel->setText(tr("粘贴成功!"));
         ui->textEdit->isModified = true;
     }
     else
     {
-        second_statusLabel->setText(tr("粘贴失败！"));
+        bar->showMessage(bar->currentMessage() + tr("    粘贴失败"));
+        //second_statusLabel->setText(tr("粘贴失败！"));
     }
 
     //ui->textEdit->paste();
@@ -185,9 +191,12 @@ void MainWindow::on_action_Paste_triggered()
 void MainWindow::init_statusBar()
 {
     // 获取状态栏
-    QStatusBar* bar = ui->statusBar;
+    bar = ui->statusBar;
+    bar->showMessage(tr("欢迎使用"));
+/*
     // 新建标签
     first_statusLabel = new QLabel;
+    //first_statusLabel->setScaledContents(true);
     // 设置标签最小尺寸
     first_statusLabel->setMinimumSize(150, 20);
     // 设置标签形状
@@ -195,6 +204,7 @@ void MainWindow::init_statusBar()
     // 设置标签阴影
     first_statusLabel->setFrameShadow(QFrame::Sunken);
     second_statusLabel = new QLabel;
+    //second_statusLabel->setScaledContents(true);
     second_statusLabel->setMinimumSize(150, 20);
     second_statusLabel->setFrameShape(QFrame::WinPanel);
     second_statusLabel->setFrameShadow(QFrame::Sunken);
@@ -202,19 +212,20 @@ void MainWindow::init_statusBar()
     bar->addWidget(second_statusLabel);
     first_statusLabel->setText(tr("欢迎使用"));
     //second_statusLabel->setText(tr("戈策制作!"));
+    */
 }
 
 void MainWindow::do_cursorChanged()
 {
     //int rowNum = ui->textEdit->document()->blockCount();
-    int rowNum;
     const QTextCursor cursor = ui->textEdit->textCursor();
     // 获取光标所在列的列号
     int colNum = cursor.columnNumber();
     // 获取光标所在行的行号
-    rowNum = cursor.blockNumber();
+    int rowNum = cursor.blockNumber();
     // 在状态栏显示光标位置
-    first_statusLabel->setText(tr("%1行 %2列").arg(rowNum).arg(colNum));
+    bar->showMessage(tr("%1行 %2列").arg(rowNum).arg(colNum));
+    //first_statusLabel->setText(tr("%1行 %2列").arg(rowNum).arg(colNum));
 }
 
 
@@ -282,11 +293,6 @@ void MainWindow::show_findText()
     QTextCursor cur = ui->textEdit->textCursor();
     find_pos = cur.position();
 
-    /*
-    if(first_find)
-    {
-        first_find = false;
-    }
     if(data.Find(find_pos, findText.toStdString()))
     {
         cur.setPosition(find_pos);
@@ -297,8 +303,7 @@ void MainWindow::show_findText()
     {
         QMessageBox::warning(this,tr("查找"),tr("未找到 %1").arg(findText));
     }
-    */
-
+/*
     if (!ui->textEdit->find(findText, QTextDocument::FindBackward))
     {
         QMessageBox::warning(this, tr("查找"), tr("未找到 %1").arg(findText));
@@ -306,6 +311,7 @@ void MainWindow::show_findText()
     else
     {
     }
+    */
 }
 
 
@@ -355,7 +361,8 @@ bool MainWindow::saveFile(const QString& fileName)
     curFile = QFileInfo(fileName).canonicalFilePath();
     // 将窗口名称改为现在窗口的路径
     setWindowTitle(curFile);
-    second_statusLabel->setText(tr("保存文件成功"));
+    bar->showMessage(bar->currentMessage() + tr("    保存文件成功！"));
+    //second_statusLabel->setText(tr("保存文件成功！"));
     file.close();
     return true;
 }
@@ -405,6 +412,10 @@ void MainWindow::do_file_SaveOrNot()
         {
             do_file_Save();
         }
+        else
+        {
+            ui->textEdit->isModified = false;
+        }
     }
 }
 
@@ -445,7 +456,8 @@ bool MainWindow::do_file_Load(const QString& fileName)
     data.Load(alltext.toStdString());
     curFile = QFileInfo(fileName).canonicalFilePath();
     setWindowTitle(curFile);
-    second_statusLabel->setText(tr("打开文件成功"));
+    bar->showMessage(bar->currentMessage() + tr("    打开文件成功！"));
+    //second_statusLabel->setText(tr("打开文件成功！"));
     file.close();
     return true;
 }
@@ -467,12 +479,27 @@ void MainWindow::do_file_New()
 // 显示作者信息
 void MainWindow::on_action_Author_triggered()
 {
-    QLabel * p_author = new QLabel();
-    p_author->resize(200, 100);
-    p_author->setWindowTitle(tr("关于"));
-    p_author->setText(tr("作者：戈策 何心 邹晓悦"));
-    p_author->setAlignment(Qt::AlignCenter);
-    p_author->show();
+    QDialog *about = new QDialog(this);
+    about->setWindowTitle(tr("关于"));
+
+    QLabel* label_gif = new QLabel(about);
+    label_gif->setScaledContents(true);
+    QMovie* movie = new QMovie(":/images/images/cat.gif");
+    movie->start();
+    label_gif->setMovie(movie);
+
+
+    QLabel* label_info = new QLabel(tr("作者：戈策  何心  邹晓悦\n邮箱：1334527295@qq.com"), about);
+    label_info->setScaledContents(true);
+    label_info->setAlignment(Qt::AlignCenter);
+    QFont ft(tr("微软雅黑"), 13);
+    label_info->setFont(ft);
+
+    QVBoxLayout* layout = new QVBoxLayout(about);
+    layout->addWidget(label_gif);
+    layout->addWidget(label_info);
+
+    about->show();
 }
 
 MainWindow::~MainWindow()
