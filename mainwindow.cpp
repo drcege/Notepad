@@ -484,7 +484,7 @@ void MainWindow::on_action_Author_triggered()
 
     QLabel* label_gif = new QLabel(about);
     label_gif->setScaledContents(true);
-    QMovie* movie = new QMovie(":/images/images/cat.gif");
+    QMovie* movie = new QMovie(QString::fromUtf8(":/images/images/cat.gif"));
     movie->start();
     label_gif->setMovie(movie);
 
