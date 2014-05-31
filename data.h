@@ -42,6 +42,7 @@ private:
     string clip;       //ºÙ«–∞Â
 
     //bool END(int l, int c);
+    int find_start(int l);
     int get_block_pos(int x);
     void create_block(Block * &currentblock);
     void delete_block(Block *currentblock);

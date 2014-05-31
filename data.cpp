@@ -205,10 +205,90 @@ bool Data::Paste(int l,int c)
 }
 
 
-bool Data::Find(int& pos, string s)
+bool Data::Find(int &pos, string s)
 {
-    return true;
+    string CLIP = "";
+    int l = 0, c = 0;
+    int length = 0;
+    int POS = pos;
+    string ::size_type r = 0;
+    find_pos(pos, l, c);
+    Line *currentline = NULL;
+    Block *currentblock = NULL;
+    currentline = get_line(l);
+
+    while (currentline != NULL)
+    {
+        currentblock = get_block(currentline, c);
+        CLIP = "";
+        CLIP = copy_line(currentblock, c, length);
+        r = CLIP.find(s, 0);
+
+        if (r != string::npos)
+        {
+            POS += int(r);
+            pos = POS;
+            return true;
+        }
+
+        POS = Data::find_start(l);
+        c = 0;
+        l++;
+        length = 0;
+        currentline = currentline->nextLine;
+    }
+
+    c = 0;
+    l = 0;
+    POS = 0;
+    currentline = firstline;
+
+    while (POS<pos)
+    {
+        currentblock = get_block(currentline, c);
+        CLIP = "";
+        CLIP = copy_line(currentblock, c, length);
+        r = CLIP.find(s, 0);
+
+        if (r != string::npos)
+        {
+            POS += int(r);
+            pos = POS;
+            return true;
+        }
+
+        POS = find_start(l);
+        c = 0;
+        l++;
+        length = 0;
+        currentline = currentline->nextLine;
+    }
+
+    return false;
 }
+
+int Data::find_start(int l)
+{
+    int s = 0;
+    Line *currentline = firstline;
+    Block *currentblock = currentline->nextBlock;
+
+    for (int i = 0; i <= l; i++)
+    {
+        currentblock = currentline->nextBlock;
+
+        while (currentblock != NULL)
+        {
+            s += currentblock->L;
+            currentblock = currentblock->nextBlock;
+        }
+
+        currentline = currentline->nextLine;
+    }
+
+    return s;
+}
+
 
 bool Data::Replace(int beg, int end, string s)
 {

@@ -52,6 +52,9 @@
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAsNeeded</enum>
       </property>
+      <property name="undoRedoEnabled">
+       <bool>false</bool>
+      </property>
       <property name="lineWrapMode">
        <enum>QTextEdit::NoWrap</enum>
       </property>
@@ -65,7 +68,7 @@
      <x>0</x>
      <y>0</y>
      <width>650</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_F">
@@ -84,7 +87,6 @@
     <property name="title">
      <string>编辑(&amp;E)</string>
     </property>
-    <addaction name="action_Undo"/>
     <addaction name="action_Copy"/>
     <addaction name="action_Paste"/>
     <addaction name="action_Cut"/>
@@ -117,7 +119,6 @@
    <addaction name="action_Paste"/>
    <addaction name="action_Cut"/>
    <addaction name="separator"/>
-   <addaction name="action_Undo"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_New">

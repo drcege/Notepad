@@ -106,12 +106,6 @@ void MainWindow::on_action_Quit_triggered()
     qApp->quit();
 }
 
-// 撤销操作
-void MainWindow::on_action_Undo_triggered()
-{
-    ui->textEdit->undo();
-}
-
 // 剪切操作
 void MainWindow::on_action_Cut_triggered()
 {
@@ -290,14 +284,21 @@ void MainWindow::show_findText()
 {
     // 获取行编辑器中的内容
     QString findText = find_textLineEdit->text();
+
+    //bar->showMessage(bar->currentMessage() + tr("    %1").arg(findText));
+    if(findText.size() == 0)
+        return ;
     QTextCursor cur = ui->textEdit->textCursor();
     find_pos = cur.position();
 
     if(data.Find(find_pos, findText.toStdString()))
     {
+        this->activateWindow();
         cur.setPosition(find_pos);
         cur.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, findText.length());
         ui->textEdit->setTextCursor(cur);
+        bar->showMessage(bar->currentMessage() + tr("    %1").arg(find_pos));
+        bar->showMessage(bar->currentMessage() + tr("    %1").arg(findText));
     }
     else
     {
@@ -326,6 +327,7 @@ void MainWindow::replace_findText()
     if (cur.hasSelection())
     {
         data.Replace(cur.selectionStart(), cur.selectionEnd(), replaceText.toStdString());
+        this->activateWindow();
         cur.removeSelectedText();
         cur.insertText(replaceText);
     }
