@@ -67,7 +67,7 @@
     <value key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory" type="QString">D:/Work/Git/notepad-build-desktop</value>
     <value key="Qt4ProjectManager.Qt4BuildConfiguration.QtVersionId" type="int">7</value>
     <value key="Qt4ProjectManager.Qt4BuildConfiguration.ToolChain" type="int">2</value>
-    <value key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild" type="bool">false</value>
+    <value key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild" type="bool">true</value>
    </valuemap>
    <valuemap key="ProjectExplorer.Target.BuildConfiguration.1" type="QVariantMap">
     <valuemap key="ProjectExplorer.BuildConfiguration.BuildStepList.0" type="QVariantMap">
@@ -117,7 +117,7 @@
     <value key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory" type="QString">D:/Work/Git/notepad-build-desktop</value>
     <value key="Qt4ProjectManager.Qt4BuildConfiguration.QtVersionId" type="int">7</value>
     <value key="Qt4ProjectManager.Qt4BuildConfiguration.ToolChain" type="int">2</value>
-    <value key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild" type="bool">false</value>
+    <value key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild" type="bool">true</value>
    </valuemap>
    <value key="ProjectExplorer.Target.BuildConfigurationCount" type="int">2</value>
    <valuemap key="ProjectExplorer.Target.DeployConfiguration.0" type="QVariantMap">

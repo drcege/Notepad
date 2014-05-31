@@ -8,7 +8,7 @@ MyTextEdit::MyTextEdit(QWidget *parent) :
     ui(new Ui::MyTextEdit)
 {
     ui->setupUi(this);
-    isModified = true;
+    isModified = false;
 }
 
 MyTextEdit::~MyTextEdit()
