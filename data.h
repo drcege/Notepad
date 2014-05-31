@@ -18,8 +18,6 @@ struct Line
     struct Block *nextBlock;
 };
 
-
-
 class Data
 {
 public:
@@ -43,7 +41,7 @@ private:
     Line *firstline;
     string clip;       //ºÙ«–∞Â
 
-    bool END(int l,int c);
+    //bool END(int l, int c);
     int get_block_pos(int x);
     void create_block(Block * &currentblock);
     void delete_block(Block *currentblock);
@@ -53,9 +51,6 @@ private:
     Block* get_block(Line *currentline, int c);
     string copy_line(Block *currentblock, int beg, int &l);
     void find_pos(int pos, int &x, int &y);
-
-
-
 };
 
 #endif // DATA_H

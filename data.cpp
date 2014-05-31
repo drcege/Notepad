@@ -75,11 +75,11 @@ bool Data::Load(string s)
 }
 
 bool Data::Copy(int beg, int end)
-{
+{/*
     QFile f("debug.txt");
     f.open(QFile::Append | QFile::Text);
     QTextStream debug(&f);
-
+*/
     int sl = 0, sc = 0, el = 0, ec = 0;
     find_pos(beg, sl, sc);
     find_pos(end-1, el, ec);
@@ -129,9 +129,9 @@ bool Data::Copy(int beg, int end)
         }
     }
 
-    debug << beg << ' ' << end << ' ' << sl << ' ' << sc << ' ' << el << ' ' << ec <<' '<< '\n';
+    //debug << beg << ' ' << end << ' ' << sl << ' ' << sc << ' ' << el << ' ' << ec <<' '<< '\n';
     //debug<<clip[0]<<clip[1]<<clip[2]<<clip[3]<<clip[4]<<clip[5]<<clip[6]<<clip[7]<<clip[8];
-    f.close();
+    //f.close();
 
     return true;
 }
