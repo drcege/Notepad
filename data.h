@@ -34,17 +34,13 @@ public:
     bool Enter(int l, int c);               //在l，c处截断形成新行
     bool Update(string s, int l, int c);    //在l，c处插入字符 (单字符string)
     bool Clear();                           //清空所有数据
-    bool Renew();
     string Clip();                          //返回剪切板数据
     string Text();                          //返回所有数据
-
-    void find_pos(int pos, int &x, int &y);
 
 private:
     Line *firstline;
     string clip;       //剪切板
 
-    //bool END(int l, int c);
     int find_start(int l);
     int get_block_pos(int x);
     char next_char(int l, int c);
@@ -53,10 +49,11 @@ private:
     void delete_block(Block *currentblock);
     void create_line(Line * &currentline);
     void insert_line(Block *currentblock,  string CLIP, int length);
+    void find_pos(int pos, int &x, int &y);
     Line* get_line(int l);
     Block* get_block(Line *currentline, int c);
+    Block* get_block_no_create(Line *currentline, int c);
     string copy_line(Block *currentblock, int beg, int &l);
-
 };
 
 #endif // DATA_H

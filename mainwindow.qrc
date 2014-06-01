@@ -10,7 +10,6 @@
         <file>images/replace.png</file>
         <file>images/save.png</file>
         <file>images/saveas.png</file>
-        <file>images/undo.png</file>
         <file>images/cat.gif</file>
         <file>images/yes.png</file>
     </qresource>

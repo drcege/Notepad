@@ -10,8 +10,8 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QLabel>
-#include <qobject.h>
 #include <QEvent>
+#include <qobject.h>
 #include "data.h"
 
 namespace Ui
@@ -41,7 +41,6 @@ private slots:
     void on_action_Paste_triggered();
     void on_action_Find_triggered();
     void on_action_Replace_triggered();
-    void on_action_Wrap_triggered();
     void show_findText();
     void replace_findText();
     void do_cursorChanged();
@@ -50,7 +49,6 @@ private:
     Ui::MainWindow *ui;
     Data data;
 
-
     //为true时标志文件已经保存，为false时标志文件尚未保存
     bool isSaved;
     //用于保存当前文件的文件名
@@ -58,9 +56,7 @@ private:
     QStatusBar* bar;
     QLineEdit *find_textLineEdit;
     QLineEdit *replace_textLineEdit;
-    //声明两个标签，用来显示状态信息
-    //QLabel* first_statusLabel;
-    //QLabel* second_statusLabel;
+
     //初始化状态栏函数
     void init_statusBar();
     //新建文件函数

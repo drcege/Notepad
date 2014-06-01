@@ -33,7 +33,7 @@
   <widget class="QWidget" name="centralWidget">
    <property name="minimumSize">
     <size>
-     <width>595</width>
+     <width>0</width>
      <height>0</height>
     </size>
    </property>
@@ -100,7 +100,6 @@
     <addaction name="action_Find"/>
     <addaction name="action_Replace"/>
     <addaction name="separator"/>
-    <addaction name="action_Wrap"/>
    </widget>
    <widget class="QMenu" name="menu_H">
     <property name="title">

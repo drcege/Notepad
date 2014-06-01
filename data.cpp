@@ -161,6 +161,11 @@ void Data::find_pos(int pos, int &x, int &y)
             currentblock = currentblock->nextBlock;
         }
         if(!flag)break;
+        if(currentline->nextLine==NULL)
+        {
+            y=t+1;
+            break;
+        }
         x++;
         before_t = t;
         currentline = currentline->nextLine;
@@ -207,22 +212,30 @@ bool Data::Paste(int l,int c)
 
 bool Data::Find(int &pos, string s)
 {
+/*
+    QFile f("debug.txt");
+        f.open(QFile::Append | QFile::Text);
+        QTextStream debug(&f);
+    debug<<QString::fromStdString("test\n");
+*/
     string CLIP = "";
     int l = 0, c = 0;
     int length = 0;
     int POS = pos;
     string ::size_type r = 0;
     find_pos(pos, l, c);
+
     Line *currentline = NULL;
     Block *currentblock = NULL;
     currentline = get_line(l);
 
     while (currentline != NULL)
     {
-        currentblock = get_block(currentline, c);
+        currentblock = get_block_no_create(currentline, c);
         CLIP = "";
-        CLIP = copy_line(currentblock, c, length);
-        r = CLIP.find(s, 0);
+        if(currentblock!=NULL)CLIP = copy_line(currentblock, c, length);
+        if(CLIP=="")r=string::npos;
+        else r = CLIP.find(s, 0);
 
         if (r != string::npos)
         {
@@ -245,10 +258,17 @@ bool Data::Find(int &pos, string s)
 
     while (POS<pos)
     {
-        currentblock = get_block(currentline, c);
+        currentblock = get_block_no_create(currentline, c);
         CLIP = "";
-        CLIP = copy_line(currentblock, c, length);
-        r = CLIP.find(s, 0);
+        if(currentblock!=NULL)CLIP = copy_line(currentblock, c, length);
+/*
+        debug<<QString::fromStdString("test\n");
+        debug<<QString::fromStdString(CLIP) << '\n';
+        debug<<QString::fromStdString(copy_line(currentblock,0,length)) << '\n';
+
+*/
+        if(CLIP=="")r=string::npos;
+        else r = CLIP.find(s, 0);
 
         if (r != string::npos)
         {
@@ -492,58 +512,6 @@ string Data::Text()
     return CLIP;
 }
 
-bool Data::Renew()
-{
-    int max_block = 79;
-    bool flag = true;
-    Line *currentline = firstline;
-    Block *currentblock = NULL;
-
-    while (currentline != NULL)
-    {
-        currentblock = currentline->nextBlock;
-        int t = 0;
-        int c = 0;
-        int l = 0;
-
-        while (currentblock != NULL)
-        {
-            for (int i = 0; i < currentblock->L; i++)
-            {
-                t++;
-
-                if (t == max_block)
-                {
-                    //下一位空，下一位是符号，下一位是回车
-                    if (currentblock->block[i] == '\n')
-                    {
-                        continue;
-                    }
-                    else if (next_char(l, c) == '\n')
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        flag = flag && Enter(l, c + 1);
-                    }
-
-                    t = 0;
-                }
-
-                c++;
-            }
-
-            currentblock = currentblock->nextBlock;
-        }
-
-        l++;
-        currentline = currentline->nextLine;
-    }
-
-    return flag;
-}
-
 char Data::next_char(int l, int c)
 {
     c++;
@@ -580,6 +548,7 @@ Line* Data::get_line(int l)
         }
 
         currentline = currentline->nextLine;
+        //if(currentline==NULL)return NULL;
     }
 
     return currentline;
@@ -658,6 +627,32 @@ Block* Data::get_block(Line *currentline, int c)
         if (currentblock->nextBlock == NULL)
         {
             create_block(currentblock);
+        }
+
+        currentblock = currentblock->nextBlock;
+    }
+
+    return currentblock;
+}
+
+Block* Data::get_block_no_create(Line *currentline, int c)
+{
+    Block *currentblock = currentline->nextBlock;
+    if(currentblock==NULL)return NULL;
+    /*if (currentline->nextBlock == NULL)
+    {
+        currentline->nextBlock = new Block;
+        currentblock = currentline->nextBlock;
+        currentblock->L = 0;
+        currentblock->nextBlock = NULL;
+    }*/
+
+    for (int i = 79; i < c; i += 80)
+    {
+        if (currentblock->nextBlock == NULL)
+        {
+            return NULL;
+            //create_block(currentblock);
         }
 
         currentblock = currentblock->nextBlock;

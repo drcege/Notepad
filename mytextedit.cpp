@@ -9,7 +9,6 @@ MyTextEdit::MyTextEdit(QWidget *parent) :
 {
     ui->setupUi(this);
     isModified = false;
-    wrap = false;
 }
 
 MyTextEdit::~MyTextEdit()
@@ -30,16 +29,9 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
             {
                 data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
                 cursor.removeSelectedText();
-            }            
-            if(wrap)
-            {
-                data->find_pos(cursor.position(), rowNum, colNum);
             }
-            else
-            {
-                rowNum = cursor.blockNumber();
-                colNum = cursor.columnNumber();
-            }
+            rowNum = cursor.blockNumber();
+            colNum = cursor.columnNumber();
             data->Update(e->text().toStdString(), rowNum, colNum);
             cursor.insertText(e->text());
             isModified = true;
@@ -67,8 +59,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     break;
 
                 case Qt::Key_Right:
-                    //cursor.movePosition(QTextCursor::Right);
-                    cursor.movePosition(QTextCursor::NextCharacter);
+                    cursor.movePosition(QTextCursor::Right);
                     setTextCursor(cursor);
                     break;
 
@@ -78,15 +69,8 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                         data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
                         cursor.removeSelectedText();
                     }
-                    if(wrap)
-                    {
-                        data->find_pos(cursor.position(), rowNum, colNum);
-                    }
-                    else
-                    {
-                        rowNum = cursor.blockNumber();
-                        colNum = cursor.columnNumber();
-                    }
+                    rowNum = cursor.blockNumber();
+                    colNum = cursor.columnNumber();
                     data->Enter(rowNum, colNum);
                     cursor.insertText(e->text());
                     isModified = true;
@@ -100,15 +84,8 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     }
                     else
                     {
-                        if(wrap)
-                        {
-                            data->find_pos(cursor.position(), rowNum, colNum);
-                        }
-                        else
-                        {
-                            rowNum = cursor.blockNumber();
-                            colNum = cursor.columnNumber();
-                        }
+                        rowNum = cursor.blockNumber();
+                        colNum = cursor.columnNumber();
                         data->Delete(rowNum, colNum);
                         cursor.deleteChar();
                     }
@@ -123,15 +100,8 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     }
                     else
                     {
-                        if(wrap)
-                        {
-                            data->find_pos(cursor.position(), rowNum, colNum);
-                        }
-                        else
-                        {
-                            rowNum = cursor.blockNumber();
-                            colNum = cursor.columnNumber();
-                        }
+                        rowNum = cursor.blockNumber();
+                        colNum = cursor.columnNumber();
                         data->Backspace(rowNum, colNum);
                         cursor.deletePreviousChar();
                     }
@@ -139,7 +109,6 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     break;
 
                 default:
-                    //data->putchar(e->text()[0].unicode()); // TODO: ignore other keys or add more keys
                     QTextEdit::keyPressEvent(e);
                     break;
                 } // end of switch
