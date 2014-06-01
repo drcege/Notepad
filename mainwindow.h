@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <qobject.h>
+#include <QEvent>
 #include "data.h"
 
 namespace Ui
@@ -25,9 +26,9 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
     bool eventFilter(QObject*, QEvent*);
+    void closeEvent(QCloseEvent *event);
 
 private slots:
-
     void on_action_Author_triggered();
     void on_action_Save_triggered();
     void on_action_New_triggered();
@@ -40,6 +41,7 @@ private slots:
     void on_action_Paste_triggered();
     void on_action_Find_triggered();
     void on_action_Replace_triggered();
+    void on_action_Wrap_triggered();
     void show_findText();
     void replace_findText();
     void do_cursorChanged();

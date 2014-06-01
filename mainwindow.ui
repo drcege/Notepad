@@ -31,6 +31,12 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="minimumSize">
+    <size>
+     <width>595</width>
+     <height>0</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="MyTextEdit" name="textEdit">
@@ -93,6 +99,8 @@
     <addaction name="separator"/>
     <addaction name="action_Find"/>
     <addaction name="action_Replace"/>
+    <addaction name="separator"/>
+    <addaction name="action_Wrap"/>
    </widget>
    <widget class="QMenu" name="menu_H">
     <property name="title">
@@ -105,6 +113,12 @@
    <addaction name="menu_H"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -195,18 +209,6 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_Undo">
-   <property name="icon">
-    <iconset resource="mainwindow.qrc">
-     <normaloff>:/images/images/undo.png</normaloff>:/images/images/undo.png</iconset>
-   </property>
-   <property name="text">
-    <string>撤销(&amp;Z)</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Z</string>
-   </property>
-  </action>
   <action name="action_Copy">
    <property name="checkable">
     <bool>false</bool>
@@ -283,6 +285,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="action_Wrap">
+   <property name="text">
+    <string>自动换行</string>
    </property>
   </action>
  </widget>

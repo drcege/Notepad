@@ -492,6 +492,66 @@ string Data::Text()
     return CLIP;
 }
 
+bool Data::Renew()
+{
+    int max_block = 79;
+    bool flag = true;
+    Line *currentline = firstline;
+    Block *currentblock = NULL;
+
+    while (currentline != NULL)
+    {
+        currentblock = currentline->nextBlock;
+        int t = 0;
+        int c = 0;
+        int l = 0;
+
+        while (currentblock != NULL)
+        {
+            for (int i = 0; i < currentblock->L; i++)
+            {
+                t++;
+
+                if (t == max_block)
+                {
+                    //下一位空，下一位是符号，下一位是回车
+                    if (currentblock->block[i] == '\n')
+                    {
+                        continue;
+                    }
+                    else if (next_char(l, c) == '\n')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        flag = flag && Enter(l, c + 1);
+                    }
+
+                    t = 0;
+                }
+
+                c++;
+            }
+
+            currentblock = currentblock->nextBlock;
+        }
+
+        l++;
+        currentline = currentline->nextLine;
+    }
+
+    return flag;
+}
+
+char Data::next_char(int l, int c)
+{
+    c++;
+    int C = get_block_pos(c);
+    Line *currentline = get_line(l);
+    Block *currentblock = get_block(currentline, c);
+    return currentblock->block[C];
+}
 
 
 void Data::create_line(Line * &currentline)

@@ -65,6 +65,12 @@ bool MainWindow::eventFilter(QObject* target , QEvent* event)
     return false;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    on_action_Quit_triggered();
+    event->accept();
+}
+
 // 新建操作
 void MainWindow::on_action_New_triggered()
 {
@@ -124,7 +130,7 @@ void MainWindow::on_action_Cut_triggered()
         }
         else
         {
-            bar->showMessage(bar->currentMessage() + tr("    剪切失败"));
+            bar->showMessage(bar->currentMessage() + tr("    剪切失败！"));
             //second_statusLabel->setText(tr("剪切失败！"));
         }
     }
@@ -140,14 +146,14 @@ void MainWindow::on_action_Copy_triggered()
     {
         if (data.Copy(cursor.selectionStart(), cursor.selectionEnd())) // 从文本开头计数,左开右闭
         {
-            bar->showMessage(bar->currentMessage() + tr("    复制成功"));
+            bar->showMessage(bar->currentMessage() + tr("    复制成功！"));
             //QString c = QString::fromStdString(data.Clip());
             //second_statusLabel->setText(tr("复制成功！"));
             //cursor.insertText("Hello World");
         }
         else
         {
-            bar->showMessage(bar->currentMessage() + tr("    复制失败"));
+            bar->showMessage(bar->currentMessage() + tr("    复制失败！"));
             //second_statusLabel->setText(tr("复制失败！"));
         }
 
@@ -164,18 +170,28 @@ void MainWindow::on_action_Copy_triggered()
 void MainWindow::on_action_Paste_triggered()
 {
     QTextCursor cursor = ui->textEdit->textCursor();
+    int rowNum = 0, colNum = 0;
 
-    if (data.Paste(cursor.blockNumber(), cursor.columnNumber()))  //光标所在行数和列数
+    if(ui->textEdit->wrap)
+    {
+        data.find_pos(cursor.position(), rowNum, colNum);
+    }
+    else
+    {
+        rowNum = cursor.blockNumber();
+        colNum = cursor.columnNumber();
+    }
+    if (data.Paste(rowNum, colNum))//光标所在行数和列数
     {
         QString qs = QString::fromStdString(data.Clip());
         cursor.insertText(qs);
-        bar->showMessage(bar->currentMessage() + tr("    粘贴成功"));
+        bar->showMessage(bar->currentMessage() + tr("    粘贴成功！"));
         //second_statusLabel->setText(tr("粘贴成功!"));
         ui->textEdit->isModified = true;
     }
     else
     {
-        bar->showMessage(bar->currentMessage() + tr("    粘贴失败"));
+        bar->showMessage(bar->currentMessage() + tr("    粘贴失败！"));
         //second_statusLabel->setText(tr("粘贴失败！"));
     }
 
@@ -213,11 +229,18 @@ void MainWindow::do_cursorChanged()
 {
     //int rowNum = ui->textEdit->document()->blockCount();
     const QTextCursor cursor = ui->textEdit->textCursor();
-    // 获取光标所在列的列号
-    int colNum = cursor.columnNumber();
-    // 获取光标所在行的行号
-    int rowNum = cursor.blockNumber();
-    // 在状态栏显示光标位置
+    int rowNum = 0, colNum = 0;
+
+    if(ui->textEdit->wrap)
+    {
+        data.find_pos(cursor.position(), rowNum, colNum);
+    }
+    else
+    {
+        rowNum = cursor.blockNumber();
+        colNum = cursor.columnNumber();
+    }
+
     bar->showMessage(tr("%1行 %2列").arg(rowNum).arg(colNum));
     //first_statusLabel->setText(tr("%1行 %2列").arg(rowNum).arg(colNum));
 }
@@ -333,7 +356,7 @@ void MainWindow::replace_findText()
     }
     else
     {
-        QMessageBox::warning(this, tr("替换"), tr("请先查找"));
+        QMessageBox::warning(this, tr("替换"), tr("请先查找！"));
     }
 }
 
@@ -347,7 +370,7 @@ bool MainWindow::saveFile(const QString& fileName)
     {
         // %1,%2表示后面的两个arg参数的值
         QMessageBox::warning(this, tr("保存文件"),
-                             tr("无法保存文件 %1:\n %2").arg(fileName).arg(file.errorString()));
+                             tr("无法保存文件 %1:\n %2！").arg(fileName).arg(file.errorString()));
         return false;
     }
 
@@ -446,7 +469,7 @@ bool MainWindow::do_file_Load(const QString& fileName)
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        QMessageBox::warning(this, tr("读取文件"), tr("无法读取  文件 %1:\n%2.").arg(fileName).arg(file.errorString()));
+        QMessageBox::warning(this, tr("读取文件"), tr("无法读取  文件 %1:\n%2！").arg(fileName).arg(file.errorString()));
         // 如果打开文件失败，弹出对话框，并返回
         return false;
     }
@@ -502,6 +525,30 @@ void MainWindow::on_action_Author_triggered()
     layout->addWidget(label_info);
 
     about->show();
+}
+
+void MainWindow::on_action_Wrap_triggered()
+{
+    data.Renew();
+    ui->textEdit->wrap = !(ui->textEdit->wrap);
+
+    QIcon icon;
+    QString src;
+
+    //bar->showMessage(bar->currentMessage() + tr("    Wrap"));
+    if(ui->textEdit->wrap)
+    {
+        src = QString::fromUtf8(":/images/images/yes.png");
+        ui->textEdit->setLineWrapMode(QTextEdit::FixedColumnWidth);
+        ui->textEdit->setLineWrapColumnOrWidth(80);
+    }
+    else
+    {
+        src = QString::fromUtf8(":/images/images/trans.png");
+        ui->textEdit->setLineWrapMode(QTextEdit::NoWrap);
+    }
+    icon.addFile(src, QSize(), QIcon::Normal, QIcon::Off);
+    ui->action_Wrap->setIcon(icon);
 }
 
 MainWindow::~MainWindow()

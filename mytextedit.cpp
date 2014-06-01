@@ -9,6 +9,7 @@ MyTextEdit::MyTextEdit(QWidget *parent) :
 {
     ui->setupUi(this);
     isModified = false;
+    wrap = false;
 }
 
 MyTextEdit::~MyTextEdit()
@@ -19,6 +20,7 @@ MyTextEdit::~MyTextEdit()
 void MyTextEdit::keyPressEvent(QKeyEvent *e)
 {
     QTextCursor cursor = textCursor();
+    int rowNum = 0, colNum = 0;
 
     if (e->modifiers() == Qt::NoModifier || e->modifiers() == Qt::ShiftModifier)
     {
@@ -29,8 +31,16 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                 data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
                 cursor.removeSelectedText();
             }            
-            //int rowNum = (cursor.position()-cursor.block().position())/81;
-            data->Update(e->text().toStdString(), cursor.blockNumber(), cursor.columnNumber());
+            if(wrap)
+            {
+                data->find_pos(cursor.position(), rowNum, colNum);
+            }
+            else
+            {
+                rowNum = cursor.blockNumber();
+                colNum = cursor.columnNumber();
+            }
+            data->Update(e->text().toStdString(), rowNum, colNum);
             cursor.insertText(e->text());
             isModified = true;
         }
@@ -57,7 +67,8 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     break;
 
                 case Qt::Key_Right:
-                    cursor.movePosition(QTextCursor::Right);
+                    //cursor.movePosition(QTextCursor::Right);
+                    cursor.movePosition(QTextCursor::NextCharacter);
                     setTextCursor(cursor);
                     break;
 
@@ -67,7 +78,16 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                         data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
                         cursor.removeSelectedText();
                     }
-                    data->Enter(cursor.blockNumber(), cursor.columnNumber());
+                    if(wrap)
+                    {
+                        data->find_pos(cursor.position(), rowNum, colNum);
+                    }
+                    else
+                    {
+                        rowNum = cursor.blockNumber();
+                        colNum = cursor.columnNumber();
+                    }
+                    data->Enter(rowNum, colNum);
                     cursor.insertText(e->text());
                     isModified = true;
                     break;
@@ -80,7 +100,16 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     }
                     else
                     {
-                        data->Delete(cursor.blockNumber(), cursor.columnNumber());
+                        if(wrap)
+                        {
+                            data->find_pos(cursor.position(), rowNum, colNum);
+                        }
+                        else
+                        {
+                            rowNum = cursor.blockNumber();
+                            colNum = cursor.columnNumber();
+                        }
+                        data->Delete(rowNum, colNum);
                         cursor.deleteChar();
                     }
                     isModified = true;
@@ -94,7 +123,16 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     }
                     else
                     {
-                        data->Backspace(cursor.blockNumber(), cursor.columnNumber());
+                        if(wrap)
+                        {
+                            data->find_pos(cursor.position(), rowNum, colNum);
+                        }
+                        else
+                        {
+                            rowNum = cursor.blockNumber();
+                            colNum = cursor.columnNumber();
+                        }
+                        data->Backspace(rowNum, colNum);
                         cursor.deletePreviousChar();
                     }
                     isModified = true;
@@ -117,4 +155,3 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
         QTextEdit::keyPressEvent(e);
     }
 }
-

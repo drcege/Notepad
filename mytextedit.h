@@ -21,6 +21,7 @@ public:
 public:
     Data *data;
     bool isModified;
+    bool wrap;
     void keyPressEvent(QKeyEvent *e);
 
 private:
