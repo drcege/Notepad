@@ -289,11 +289,30 @@ int Data::find_start(int l)
     return s;
 }
 
-
 bool Data::Replace(int beg, int end, string s)
 {
-    return true;
+    int l = 0, c = 0;
+    bool flag = true;
+    find_pos(beg, l, c);
+
+    for (int i = beg; i < end; i++)
+    {
+        flag = flag && Delete(l, c);
+    }
+
+    if (s != "")
+    {
+        //find_pos(beg,l,c);
+        string CLIP = clip;
+        clip = s;
+        flag = flag && Paste(l, c);
+        clip = CLIP;
+    }
+
+    return flag;
 }
+
+
 
 bool Data::Delete(int l, int c)
 {
@@ -432,9 +451,22 @@ bool Data::Update(string s, int l, int c)
     return true;
 }
 
-bool Data::Clear()                           //清空所有数据
+bool Data::Clear()
 {
+    delete_line(firstline);
+    firstline = NULL;
+    clip = "";
     return true;
+}
+
+void Data::delete_line(Line *currentline)
+{
+    if (currentline != NULL)
+    {
+        delete_block(currentline->nextBlock);
+        delete_line(currentline->nextLine);
+        delete(currentline);
+    }
 }
 
 string Data::Clip()                          //返回剪切板数据

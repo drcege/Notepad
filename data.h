@@ -44,6 +44,7 @@ private:
     //bool END(int l, int c);
     int find_start(int l);
     int get_block_pos(int x);
+    void delete_line(Line *currentline);
     void create_block(Block * &currentblock);
     void delete_block(Block *currentblock);
     void create_line(Line * &currentline);

@@ -333,7 +333,7 @@ void MainWindow::replace_findText()
     }
     else
     {
-        QMessageBox::warning(this, tr("ÃÊªª"), tr("Œ¥’“µΩ %1").arg(findText));
+        QMessageBox::warning(this, tr("ÃÊªª"), tr("«Îœ»≤È’“"));
     }
 }
 

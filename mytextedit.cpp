@@ -28,7 +28,8 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
             {
                 data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
                 cursor.removeSelectedText();
-            }
+            }            
+            //int rowNum = (cursor.position()-cursor.block().position())/81;
             data->Update(e->text().toStdString(), cursor.blockNumber(), cursor.columnNumber());
             cursor.insertText(e->text());
             isModified = true;
