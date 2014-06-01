@@ -6,6 +6,7 @@
 #include <QCursor>
 #include <QTextEdit>
 #include <QKeyEvent>
+#include <QEvent>
 #include <qobject.h>
 
 int find_pos;
