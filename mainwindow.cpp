@@ -155,12 +155,15 @@ void MainWindow::on_action_Copy_triggered()
 // 粘贴操作
 void MainWindow::on_action_Paste_triggered()
 {
+    if(data.Clip().empty())   //剪切板无内容
+        return ;
+
     QTextCursor cursor = ui->textEdit->textCursor();
     int rowNum = 0, colNum = 0;
 
     rowNum = cursor.blockNumber();
     colNum = cursor.columnNumber();
-    if (data.Paste(rowNum, colNum))//光标所在行数和列数
+    if (data.Paste(rowNum, colNum))      //光标所在行数和列数
     {
         QString qs = QString::fromStdString(data.Clip());
         cursor.insertText(qs);
@@ -263,8 +266,8 @@ void MainWindow::show_findText()
         cur.setPosition(find_pos);
         cur.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, findText.length());
         ui->textEdit->setTextCursor(cur);
-        bar->showMessage(bar->currentMessage() + tr("    %1").arg(find_pos));
-        bar->showMessage(bar->currentMessage() + tr("    %1").arg(findText));
+        //bar->showMessage(bar->currentMessage() + tr("    %1").arg(find_pos));
+        //bar->showMessage(bar->currentMessage() + tr("    %1").arg(findText));
     }
     else
     {

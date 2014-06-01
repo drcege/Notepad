@@ -10,6 +10,7 @@ using namespace std;
 Data::Data()
 {
     firstline = NULL;
+    clip = "";
 }
 
 Data::~Data()
