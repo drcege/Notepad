@@ -29,15 +29,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->textEdit, SIGNAL(cursorPositionChanged()), this, SLOT(do_cursorChanged()));
 }
 
-bool MainWindow::eventFilter(QObject* target , QEvent* event)
+bool MainWindow::eventFilter(QObject* target , QEvent* event)         // 事件过滤
 {
-    if (target == ui->textEdit)
+    if (target == ui->textEdit)                                       //过滤编辑区的按键操作
     {
         if (event->type() == QEvent::KeyPress)
         {
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
-            if (keyEvent->modifiers() == Qt::ControlModifier)
+            if (keyEvent->modifiers() == Qt::ControlModifier)         //ctrl修饰
             {
                 switch (keyEvent->key())
                 {
@@ -56,14 +56,16 @@ bool MainWindow::eventFilter(QObject* target , QEvent* event)
                 default:
                     return false;
                 }
+
                 return true;
             }
         }
     }
+
     return false;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::closeEvent(QCloseEvent *event)                       //主窗口退出提示
 {
     on_action_Quit_triggered();
     event->accept();
@@ -130,6 +132,7 @@ void MainWindow::on_action_Cut_triggered()
             bar->showMessage(bar->currentMessage() + tr("    剪切失败！"));
         }
     }
+
     //ui->textEdit->cut();
 }
 
@@ -149,20 +152,23 @@ void MainWindow::on_action_Copy_triggered()
             bar->showMessage(bar->currentMessage() + tr("    复制失败！"));
         }
     }
+
     //ui->textEdit->copy();
 }
 
 // 粘贴操作
 void MainWindow::on_action_Paste_triggered()
 {
-    if(data.Clip().empty())   //剪切板无内容
+    if (data.Clip().empty())  //剪切板无内容
+    {
         return ;
+    }
 
     QTextCursor cursor = ui->textEdit->textCursor();
     int rowNum = 0, colNum = 0;
-
     rowNum = cursor.blockNumber();
     colNum = cursor.columnNumber();
+
     if (data.Paste(rowNum, colNum))      //光标所在行数和列数
     {
         QString qs = QString::fromStdString(data.Clip());
@@ -174,6 +180,7 @@ void MainWindow::on_action_Paste_triggered()
     {
         bar->showMessage(bar->currentMessage() + tr("    粘贴失败！"));
     }
+
     //ui->textEdit->paste();
 }
 
@@ -189,7 +196,6 @@ void MainWindow::do_cursorChanged()
     //int rowNum = ui->textEdit->document()->blockCount();
     const QTextCursor cursor = ui->textEdit->textCursor();
     int rowNum = 0, colNum = 0;
-
     rowNum = cursor.blockNumber();
     colNum = cursor.columnNumber();
     bar->showMessage(tr("%1行 %2列").arg(rowNum).arg(colNum));
@@ -254,13 +260,16 @@ void MainWindow::show_findText()
     // 获取行编辑器中的内容
     QString findText = find_textLineEdit->text();
 
-    if(findText.size() == 0)
+    if (findText.size() == 0)
+    {
         return ;
+    }
+
     QTextCursor cur = ui->textEdit->textCursor();
     find_pos = cur.position();
 
     //bar->showMessage(bar->currentMessage() + tr("    %1").arg(find_pos));
-    if(data.Find(find_pos, findText.toStdString()))
+    if (data.Find(find_pos, findText.toStdString()))
     {
         this->activateWindow();
         cur.setPosition(find_pos);
@@ -271,7 +280,7 @@ void MainWindow::show_findText()
     }
     else
     {
-        QMessageBox::warning(this,tr("查找"),tr("未找到 %1！").arg(findText));
+        QMessageBox::warning(this, tr("查找"), tr("未找到 %1！").arg(findText));
     }
 }
 
@@ -315,7 +324,6 @@ bool MainWindow::saveFile(const QString& fileName)
     // 将文本编辑器里的内容以纯文本的式输出到流对象中
     string all = data.Text();
     out << QString::fromStdString(all);
-
     isSaved = true;
     ui->textEdit->isModified = false;
     // 获得文件的标准路径
@@ -323,7 +331,6 @@ bool MainWindow::saveFile(const QString& fileName)
     // 将窗口名称改为现在窗口的路径
     setWindowTitle(curFile);
     bar->showMessage(bar->currentMessage() + tr("    保存文件成功！"));
-
     file.close();
     return true;
 }
@@ -441,23 +448,19 @@ void MainWindow::on_action_Author_triggered()
 {
     QDialog *about = new QDialog(this);
     about->setWindowTitle(tr("关于"));
-
     QLabel* label_gif = new QLabel(about);
     label_gif->setScaledContents(true);
     QMovie* movie = new QMovie(QString::fromUtf8(":/images/images/cat.gif"));
     movie->start();
     label_gif->setMovie(movie);
-
     QLabel* label_info = new QLabel(tr("作者：戈策  何心  邹晓悦\n邮箱：1334527295@qq.com"), about);
     label_info->setScaledContents(true);
     label_info->setAlignment(Qt::AlignCenter);
     QFont ft(tr("微软雅黑"), 13);
     label_info->setFont(ft);
-
     QVBoxLayout* layout = new QVBoxLayout(about);
     layout->addWidget(label_gif);
     layout->addWidget(label_info);
-
     about->show();
 }
 

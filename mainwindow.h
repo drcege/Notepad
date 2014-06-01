@@ -53,6 +53,7 @@ private:
     bool isSaved;
     //用于保存当前文件的文件名
     QString curFile;
+    //状态栏
     QStatusBar* bar;
     QLineEdit *find_textLineEdit;
     QLineEdit *replace_textLineEdit;
