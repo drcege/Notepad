@@ -23,23 +23,23 @@ class Data
 public:
     Data();
     ~Data();
-    bool Load(string s);                      //¶ÁÈ¡ÎÄ¼ş£¬½«sÄÚÈİĞ´ÈëÊı¾İ½á¹¹
-    bool Copy(int beg, int end);              //´ÓÎÄ¼ş¿ªÍ·µÄ×Ö·ûÊı£¬×ó±ÕÓÒ¿ª
-    bool Cut(int beg, int end);               //´ÓÎÄ¼ş¿ªÍ·µÄ×Ö·ûÊı£¬×ó±ÕÓÒ¿ª
-    bool Paste(int l, int c);                 //ĞĞÊıºÍÁĞÊı
-    bool Find(int& pos, string s);            //posÎª´ÓÎÄ¼ş¿ªÍ·µÄ×Ö·ûÊı,²éÕÒ×Ö·û´®s£¬ÒıÓÃ·µ»Ø²éÕÒµ½Î»ÖÃ
-    bool Replace(int beg, int end, string s); //½«beg-endÄÚÌæ»»Îªs
-    bool Delete(int l, int c);                //ÔÚl£¬c´¦É¾³ıºóÒ»¸ö×Ö·û
-    bool Backspace(int l, int c);             //ÔÚl£¬c´¦É¾³ıÇ°Ò»¸ö×Ö·û
-    bool Enter(int l, int c);                 //ÔÚl£¬c´¦½Ø¶ÏĞÎ³ÉĞÂĞĞ
-    bool Update(string s, int l, int c);      //ÔÚl£¬c´¦²åÈë×Ö·û (µ¥×Ö·ûstring)
-    bool Clear();                             //Çå¿ÕËùÓĞÊı¾İ
-    string Clip();                            //·µ»Ø¼ôÇĞ°åÊı¾İ
-    string Text();                            //·µ»ØËùÓĞÊı¾İ
+    bool Load(string s);                      //è¯»å–æ–‡ä»¶ï¼Œå°†så†…å®¹å†™å…¥æ•°æ®ç»“æ„
+    bool Copy(int beg, int end);              //ä»æ–‡ä»¶å¼€å¤´çš„å­—ç¬¦æ•°ï¼Œå·¦é—­å³å¼€
+    bool Cut(int beg, int end);               //ä»æ–‡ä»¶å¼€å¤´çš„å­—ç¬¦æ•°ï¼Œå·¦é—­å³å¼€
+    bool Paste(int l, int c);                 //è¡Œæ•°å’Œåˆ—æ•°
+    bool Find(int& pos, string s);            //posä¸ºä»æ–‡ä»¶å¼€å¤´çš„å­—ç¬¦æ•°,æŸ¥æ‰¾å­—ç¬¦ä¸²sï¼Œå¼•ç”¨è¿”å›æŸ¥æ‰¾åˆ°ä½ç½®
+    bool Replace(int beg, int end, string s); //å°†beg-endå†…æ›¿æ¢ä¸ºs
+    bool Delete(int l, int c);                //åœ¨lï¼Œcå¤„åˆ é™¤åä¸€ä¸ªå­—ç¬¦
+    bool Backspace(int l, int c);             //åœ¨lï¼Œcå¤„åˆ é™¤å‰ä¸€ä¸ªå­—ç¬¦
+    bool Enter(int l, int c);                 //åœ¨lï¼Œcå¤„æˆªæ–­å½¢æˆæ–°è¡Œ
+    bool Update(string s, int l, int c);      //åœ¨lï¼Œcå¤„æ’å…¥å­—ç¬¦ (å•å­—ç¬¦string)
+    bool Clear();                             //æ¸…ç©ºæ‰€æœ‰æ•°æ®
+    string Clip();                            //è¿”å›å‰ªåˆ‡æ¿æ•°æ®
+    string Text();                            //è¿”å›æ‰€æœ‰æ•°æ®
 
 private:
-    Line *firstline;    //ÎÄ¼şÍ·Ö¸Õë
-    string clip;        //¼ôÇĞ°å
+    Line *firstline;    //æ–‡ä»¶å¤´æŒ‡é’ˆ
+    string clip;        //å‰ªåˆ‡æ¿
 
     int find_start(int l);
     int get_block_pos(int x);

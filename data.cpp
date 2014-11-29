@@ -6,7 +6,7 @@
 #include <QTextStream>
 
 using namespace std;
-//---------------------------¹¹Ôìº¯Êı-----------------------------------------//
+//---------------------------æ„é€ å‡½æ•°-----------------------------------------//
 Data::Data()
 {
     firstline = NULL;
@@ -14,22 +14,22 @@ Data::Data()
 }
 //----------------------------------------------------------------------------//
 
-//---------------------------Îö¹¹º¯Êı-----------------------------------------//
+//---------------------------ææ„å‡½æ•°-----------------------------------------//
 Data::~Data()
 {
 }
 //----------------------------------------------------------------------------//
 
-//--------------------------´ò¿ªÎÄµµ------------------------------------------//
+//--------------------------æ‰“å¼€æ–‡æ¡£------------------------------------------//
 bool Data::Load(string s)
 {
     Block *currentblock = NULL;
     Line *currentline = NULL;
-    int i = 0;//¼ÇÂ¼×Ö·û´®ÏÂ±ê
-    int t = 0;//¼ÇÂ¼µ±Ç°¿éÄÚ×Ö·ûÊıÁ¿
-    bool change_line = true;//ÅĞ¶ÏÊÇ·ñ»»ĞĞ
+    int i = 0;//è®°å½•å­—ç¬¦ä¸²ä¸‹æ ‡
+    int t = 0;//è®°å½•å½“å‰å—å†…å­—ç¬¦æ•°é‡
+    bool change_line = true;//åˆ¤æ–­æ˜¯å¦æ¢è¡Œ
 
-    if (s[i] != '\0')//·Ç¿ÕÎÄµµ½¨Á¢Í·Ö¸Õë
+    if (s[i] != '\0')//éç©ºæ–‡æ¡£å»ºç«‹å¤´æŒ‡é’ˆ
     {
         firstline = new Line;
         firstline->nextBlock = NULL;
@@ -37,9 +37,9 @@ bool Data::Load(string s)
         currentline = firstline;
     }
 
-    while (s[i] != '\0')//ÒÀ´Î±éÀúÃ¿Ò»¸ö×Ö·û
+    while (s[i] != '\0')//ä¾æ¬¡éå†æ¯ä¸€ä¸ªå­—ç¬¦
     {
-        if (change_line)//½øĞĞ»»ĞĞ²Ù×÷£¬ĞÂ½¨Ò»ĞĞ£¬²¢³õÊ¼»¯
+        if (change_line)//è¿›è¡Œæ¢è¡Œæ“ä½œï¼Œæ–°å»ºä¸€è¡Œï¼Œå¹¶åˆå§‹åŒ–
         {
             change_line = false;
             currentline->nextBlock = new Block;
@@ -47,96 +47,96 @@ bool Data::Load(string s)
             currentblock->L = 0;
             currentblock->nextBlock = NULL;
         }
-        else if (t == 0)//µ±Ç°¿éÎªĞÂµÄ¿é£¬ĞÂ½¨¿é£¬³õÊ¼»¯
+        else if (t == 0)//å½“å‰å—ä¸ºæ–°çš„å—ï¼Œæ–°å»ºå—ï¼Œåˆå§‹åŒ–
         {
             Data::create_block(currentblock);
             currentblock = currentblock->nextBlock;
         }
 
-        currentblock->block[currentblock->L] = s[i];//½«µ±Ç°×Ö·û´æÈë¿éÄÚ
-        currentblock->L++;//¿éÄÚÔªËØÊıÁ¿¼ÓÒ»
-        t++;//µ±Ç°¿éÄÚÔªËØÊıÁ¿¼ÓÒ»
+        currentblock->block[currentblock->L] = s[i];//å°†å½“å‰å­—ç¬¦å­˜å…¥å—å†…
+        currentblock->L++;//å—å†…å…ƒç´ æ•°é‡åŠ ä¸€
+        t++;//å½“å‰å—å†…å…ƒç´ æ•°é‡åŠ ä¸€
 
-        if (s[i] == '\n')//Óöµ½»Ø³µ·û
+        if (s[i] == '\n')//é‡åˆ°å›è½¦ç¬¦
         {
-            t = 0;//»»ĞĞÖÂÊ¹ĞÎ³ÉĞÂµÄ¿é
-            change_line = true;//ĞŞÕı»»ĞĞ±êÖ¾
+            t = 0;//æ¢è¡Œè‡´ä½¿å½¢æˆæ–°çš„å—
+            change_line = true;//ä¿®æ­£æ¢è¡Œæ ‡å¿—
 
-            if (s[i + 1] != '\0')//Èô²»ÎªÎÄ¼şÄ©Î²µÄ»Ø³··ûÔò½øĞĞ»»ĞĞ²Ù×÷
+            if (s[i + 1] != '\0')//è‹¥ä¸ä¸ºæ–‡ä»¶æœ«å°¾çš„å›æ’¤ç¬¦åˆ™è¿›è¡Œæ¢è¡Œæ“ä½œ
             {
-                Data::create_line(currentline);//ĞÂ½¨Ò»ĞĞ£¬³õÊ¼»¯
-                currentline = currentline->nextLine;//ĞŞÕıÖ¸Õë
+                Data::create_line(currentline);//æ–°å»ºä¸€è¡Œï¼Œåˆå§‹åŒ–
+                currentline = currentline->nextLine;//ä¿®æ­£æŒ‡é’ˆ
             }
         }
-        else if (t == 80)//µ±Ç°¿éÄÚÒÑÂú
+        else if (t == 80)//å½“å‰å—å†…å·²æ»¡
         {
-            t = 0;//ĞÎ³ÉĞÂ¿é
+            t = 0;//å½¢æˆæ–°å—
         }
 
-        i++;//×Ö·û´®Êı×éÏÂ±êÀÛ¼Ó
+        i++;//å­—ç¬¦ä¸²æ•°ç»„ä¸‹æ ‡ç´¯åŠ 
     }
 
     return true;
 }
 //----------------------------------------------------------------------------//
 
-//----------------------------¿½±´º¯Êı----------------------------------------//
+//----------------------------æ‹·è´å‡½æ•°----------------------------------------//
 bool Data::Copy(int beg, int end)
 {
-    int sl = 0, sc = 0, el = 0, ec = 0;//·Ö±ğ´æ´¢¿ªÊ¼Î»ÖÃĞĞºÅ£¬ÁĞºÅ£¬½áÊøÎ»ÖÃĞĞºÅÁĞºÅ
-    find_pos(beg, sl, sc);//»ñµÃ¿ªÊ¼Î»ÖÃ
-    find_pos(end - 1, el, ec); //»ñµÃ½áÊøÎ»ÖÃ
-    Line *currentline = get_line(sl); //»ñµÃ¿ªÊ¼Î»ÖÃµÄĞĞÖ¸Õë
-    clip = "";//¼ôÇĞ°åÇå¿Õ
-    Block *currentblock = get_block(currentline, sc); //»îµÄ¿ªÊ¼Î»ÖÃµÄ¿éÖ¸Õë
+    int sl = 0, sc = 0, el = 0, ec = 0;//åˆ†åˆ«å­˜å‚¨å¼€å§‹ä½ç½®è¡Œå·ï¼Œåˆ—å·ï¼Œç»“æŸä½ç½®è¡Œå·åˆ—å·
+    find_pos(beg, sl, sc);//è·å¾—å¼€å§‹ä½ç½®
+    find_pos(end - 1, el, ec); //è·å¾—ç»“æŸä½ç½®
+    Line *currentline = get_line(sl); //è·å¾—å¼€å§‹ä½ç½®çš„è¡ŒæŒ‡é’ˆ
+    clip = "";//å‰ªåˆ‡æ¿æ¸…ç©º
+    Block *currentblock = get_block(currentline, sc); //æ´»çš„å¼€å§‹ä½ç½®çš„å—æŒ‡é’ˆ
 
-    if (sl == el) //¸´ÖÆµÄÄÚÈİÔÚÍ¬Ò»ĞĞ
+    if (sl == el) //å¤åˆ¶çš„å†…å®¹åœ¨åŒä¸€è¡Œ
     {
-        int t = get_block_pos(sc); //»ñµÃ¿ªÊ¼Î»ÖÃÔÚ¿éÄÚµÄÏÂ±ê
+        int t = get_block_pos(sc); //è·å¾—å¼€å§‹ä½ç½®åœ¨å—å†…çš„ä¸‹æ ‡
 
-        for (int i = sc; i <= ec; i++) //Öğ¸ö¿½±´
+        for (int i = sc; i <= ec; i++) //é€ä¸ªæ‹·è´
         {
             clip += currentblock->block[t];
-            t++;//ÅĞ¶ÏÊÇ·ñÒÑ±éÀúµ½×îºóÒ»¸öÎ»ÖÃ
+            t++;//åˆ¤æ–­æ˜¯å¦å·²éå†åˆ°æœ€åä¸€ä¸ªä½ç½®
 
-            if (t == 80) //±éÀúµ½×îºóÒ»¸öÎ»ÖÃÔò±éÀúÏÂÒ»¸ö¿é
+            if (t == 80) //éå†åˆ°æœ€åä¸€ä¸ªä½ç½®åˆ™éå†ä¸‹ä¸€ä¸ªå—
             {
                 t = 0;
                 currentblock = currentblock->nextBlock;
             }
         }
     }
-    else//Òª¸´ÖÆµÄÄÚÈİ¿çĞĞ
+    else//è¦å¤åˆ¶çš„å†…å®¹è·¨è¡Œ
     {
         int length = 0;
-        clip += copy_line(currentblock, sc, length); //ÏÖ½«µÚÒ»ĞĞ´ÓÆğÊ¼µ½Ä©Î²¸´ÖÆµ½¼ôÇĞ°åÖĞ
-        currentline = currentline->nextLine; //Ö¸ÕëÌøµ½ÏÂÒ»ĞĞ
-        currentblock = currentline->nextBlock; //¿éÖ¸ÕëÖ»ÏëĞÂÒ»ĞĞµÄµÚÒ»¸ö¿é
+        clip += copy_line(currentblock, sc, length); //ç°å°†ç¬¬ä¸€è¡Œä»èµ·å§‹åˆ°æœ«å°¾å¤åˆ¶åˆ°å‰ªåˆ‡æ¿ä¸­
+        currentline = currentline->nextLine; //æŒ‡é’ˆè·³åˆ°ä¸‹ä¸€è¡Œ
+        currentblock = currentline->nextBlock; //å—æŒ‡é’ˆåªæƒ³æ–°ä¸€è¡Œçš„ç¬¬ä¸€ä¸ªå—
 
-        for (int i = sl + 1; i <= (el - 1); i++) //±éÀúÖĞ¼äÕûĞĞĞèÒª¸´ÖÆµÄ²¿·Ö
+        for (int i = sl + 1; i <= (el - 1); i++) //éå†ä¸­é—´æ•´è¡Œéœ€è¦å¤åˆ¶çš„éƒ¨åˆ†
         {
-            while (currentblock != NULL) //±éÀúÃ¿¸ö¿é
+            while (currentblock != NULL) //éå†æ¯ä¸ªå—
             {
                 for (int j = 0; j < currentblock->L; j++)
                 {
-                    clip += currentblock->block[j];    //¸´ÖÆ¿éÄÚËùÓĞÄÚÈİ
+                    clip += currentblock->block[j];    //å¤åˆ¶å—å†…æ‰€æœ‰å†…å®¹
                 }
 
-                currentblock = currentblock->nextBlock; //±éÀúÏÂÒ»¿é
+                currentblock = currentblock->nextBlock; //éå†ä¸‹ä¸€å—
             }
 
-            currentline = currentline->nextLine; //±éÀúÏÂÒ»ĞĞ
-            currentblock = currentline->nextBlock; //ĞŞÕı¿éÖ¸Õë
+            currentline = currentline->nextLine; //éå†ä¸‹ä¸€è¡Œ
+            currentblock = currentline->nextBlock; //ä¿®æ­£å—æŒ‡é’ˆ
         }
 
-        int t = 0; //ÅĞ¶Ïµ±Ç°¿éÄÚÔªËØÊÇ·ñÈ«²¿¸´ÖÆÍê
+        int t = 0; //åˆ¤æ–­å½“å‰å—å†…å…ƒç´ æ˜¯å¦å…¨éƒ¨å¤åˆ¶å®Œ
 
-        for (int i = 0; i <= ec; i++) //¸´ÖÆ½áÊøĞĞµÄÔªËØ
+        for (int i = 0; i <= ec; i++) //å¤åˆ¶ç»“æŸè¡Œçš„å…ƒç´ 
         {
             clip += currentblock->block[t];
             t++;
 
-            if (t == 80) //µ±Ç°¿éÒÑ¸´ÖÆÍê£¬½øÈëÏÂÒ»¿é
+            if (t == 80) //å½“å‰å—å·²å¤åˆ¶å®Œï¼Œè¿›å…¥ä¸‹ä¸€å—
             {
                 t = 0;
                 currentblock = currentblock->nextBlock;
@@ -148,30 +148,30 @@ bool Data::Copy(int beg, int end)
 }
 //----------------------------------------------------------------------------//
 
-//------------------------²éÕÒµÚposÎ»ÖÃÔªËØËùÔÚĞĞÁĞ---------------------------//
+//------------------------æŸ¥æ‰¾ç¬¬posä½ç½®å…ƒç´ æ‰€åœ¨è¡Œåˆ—---------------------------//
 void Data::find_pos(int pos, int &x, int &y)
 {
     Line *currentline = firstline;
     Block *currentblock = firstline->nextBlock;
-    int t = 0;//¼ÇÂ¼ÒÑ±éÀú¶àÉÙ¸öÔªËØ
-    int before_t = 0;//¼ÇÂ¼½ØÖ¹µ½ÉÏÒ»ĞĞ¹²ÓĞ¶àÉÙ¸öÔªËØ
+    int t = 0;//è®°å½•å·²éå†å¤šå°‘ä¸ªå…ƒç´ 
+    int before_t = 0;//è®°å½•æˆªæ­¢åˆ°ä¸Šä¸€è¡Œå…±æœ‰å¤šå°‘ä¸ªå…ƒç´ 
     pos++;
     bool flag = true;
 
     while (flag)
     {
-        while (currentblock != NULL)//µ±Ç°¿é·Ç¿Õ£¬±éÀú
+        while (currentblock != NULL)//å½“å‰å—éç©ºï¼Œéå†
         {
-            t += currentblock->L;//ÀÛ¼Ó
+            t += currentblock->L;//ç´¯åŠ 
 
-            if (t >= pos)//ÒÑÕÒµ½
+            if (t >= pos)//å·²æ‰¾åˆ°
             {
-                y = pos - before_t - 1;//µÃµ½ÁĞºÅ
+                y = pos - before_t - 1;//å¾—åˆ°åˆ—å·
                 flag = false;
                 break;
             }
 
-            currentblock = currentblock->nextBlock;//±éÀúÏÂÒ»¿é
+            currentblock = currentblock->nextBlock;//éå†ä¸‹ä¸€å—
         }
 
         if (!flag)
@@ -179,112 +179,112 @@ void Data::find_pos(int pos, int &x, int &y)
             break;
         }
 
-        if (currentline->nextLine == NULL) //ÌØÅĞ£¬µ±Ç°Î»ÖÃÎªÎÄ±¾×îºóÒ»¸öÎ»ÖÃ
+        if (currentline->nextLine == NULL) //ç‰¹åˆ¤ï¼Œå½“å‰ä½ç½®ä¸ºæ–‡æœ¬æœ€åä¸€ä¸ªä½ç½®
         {
             y = t + 1;
             break;
         }
 
-        x++;//±éÀúÏÂÒ»ĞĞ
-        before_t = t;//ĞŞÕı
+        x++;//éå†ä¸‹ä¸€è¡Œ
+        before_t = t;//ä¿®æ­£
         currentline = currentline->nextLine;
         currentblock = currentline->nextBlock;
     }
 }
 //----------------------------------------------------------------------------//
 
-//---------------------------¼ôÇĞº¯Êı-----------------------------------------//
+//---------------------------å‰ªåˆ‡å‡½æ•°-----------------------------------------//
 bool Data::Cut(int beg, int end)
 {
-    bool flag = Copy(beg, end); //¸´ÖÆÒª¼ôÇĞµÄÄÚÈİ
+    bool flag = Copy(beg, end); //å¤åˆ¶è¦å‰ªåˆ‡çš„å†…å®¹
     int l = 0, c = 0;
-    find_pos(beg, l, c); //µÃµ½ÆğÊ¼Î»ÖÃµÄĞĞºÅÁĞºÅ
+    find_pos(beg, l, c); //å¾—åˆ°èµ·å§‹ä½ç½®çš„è¡Œå·åˆ—å·
 
     for (int i = beg; i < end; i++)
     {
-        flag = flag && Delete(l, c); //Öğ¸öÉ¾³ıÒª¼ôÇĞµÄÔªËØ
+        flag = flag && Delete(l, c); //é€ä¸ªåˆ é™¤è¦å‰ªåˆ‡çš„å…ƒç´ 
     }
 
     return flag;
 }
 //----------------------------------------------------------------------------//
 
-//-----------------------------------Õ³Ìùº¯Êı---------------------------------//
+//-----------------------------------ç²˜è´´å‡½æ•°---------------------------------//
 bool Data::Paste(int l, int c)
 {
-    int i = 0; //¼ÇÂ¼¼ôÇĞ°åÄÚÔªËØÏÂ±ê
+    int i = 0; //è®°å½•å‰ªåˆ‡æ¿å†…å…ƒç´ ä¸‹æ ‡
     bool flag = true;
 
-    while (clip[i] != '\0') //¼ôÇĞ°å·Ç¿Õ1
+    while (clip[i] != '\0') //å‰ªåˆ‡æ¿éç©º1
     {
-        if (clip[i] == '\n') //¼ôÇĞ°åµ±Ç°ÔªËØÎª»Ø³µ·û
+        if (clip[i] == '\n') //å‰ªåˆ‡æ¿å½“å‰å…ƒç´ ä¸ºå›è½¦ç¬¦
         {
-            flag = flag && Enter(l, c); //²åÈë»Ø³µ
-            l++;//¸üĞÂĞĞºÅ
-            c = 0; //¸üĞÂÁĞºÅ
+            flag = flag && Enter(l, c); //æ’å…¥å›è½¦
+            l++;//æ›´æ–°è¡Œå·
+            c = 0; //æ›´æ–°åˆ—å·
         }
         else
         {
             string s = "";
             s += clip[i];
-            flag = flag && Update(s, l, c); //ÔÚµ±Ç°Î»ÖÃ¿½±´µ±Ç°ÔªËØ
+            flag = flag && Update(s, l, c); //åœ¨å½“å‰ä½ç½®æ‹·è´å½“å‰å…ƒç´ 
             c++;
         }
 
-        i++;//ÏÂ±êºóÒÆ
+        i++;//ä¸‹æ ‡åç§»
     }
 
     return flag;
 }
 //----------------------------------------------------------------------------//
 
-//----------------------------²éÕÒº¯Êı----------------------------------------//
+//----------------------------æŸ¥æ‰¾å‡½æ•°----------------------------------------//
 bool Data::Find(int &pos, string s)
 {
-    string CLIP = "";//ÓÃÓÚ´æ·Å´ı²éÕÒ´®
-    int l = 0, c = 0;//¼ÇÂ¼ĞĞºÅÁĞºÅ
+    string CLIP = "";//ç”¨äºå­˜æ”¾å¾…æŸ¥æ‰¾ä¸²
+    int l = 0, c = 0;//è®°å½•è¡Œå·åˆ—å·
     int length = 0;
-    int POS = pos;//¼ÇÂ¼²éÕÒÎ»ÖÃ
-    string ::size_type r = 0;//²éÕÒº¯Êı·µ»ØÖµ
-    find_pos(pos, l, c);//¶¨ÎªÆğÊ¼Î»ÖÃĞĞÁĞ
+    int POS = pos;//è®°å½•æŸ¥æ‰¾ä½ç½®
+    string ::size_type r = 0;//æŸ¥æ‰¾å‡½æ•°è¿”å›å€¼
+    find_pos(pos, l, c);//å®šä¸ºèµ·å§‹ä½ç½®è¡Œåˆ—
     Line *currentline = NULL;
     Block *currentblock = NULL;
-    currentline = get_line(l);//¶¨Î»ÆğÊ¼Î»ÖÃĞĞÖ¸Õë
+    currentline = get_line(l);//å®šä½èµ·å§‹ä½ç½®è¡ŒæŒ‡é’ˆ
 
     while (currentline != NULL)
     {
-        currentblock = get_block_no_create(currentline, c);//¶¨Î»¿éÖ¸Õë
+        currentblock = get_block_no_create(currentline, c);//å®šä½å—æŒ‡é’ˆ
         CLIP = "";
 
         if (currentblock != NULL)
         {
-            CLIP = copy_line(currentblock, c, length);    //½«ÕâÒ»ĞĞÖ®ºóµÄ²¿·Ö¸´ÖÆµ½CLIPÖĞ£¬ÓÃÓÚÕûĞĞ²éÕÒ
+            CLIP = copy_line(currentblock, c, length);    //å°†è¿™ä¸€è¡Œä¹‹åçš„éƒ¨åˆ†å¤åˆ¶åˆ°CLIPä¸­ï¼Œç”¨äºæ•´è¡ŒæŸ¥æ‰¾
         }
 
         if (CLIP == "")
         {
-            r = string::npos;    //¿Õ´®
+            r = string::npos;    //ç©ºä¸²
         }
         else
         {
-            r = CLIP.find(s, 0);    //²éÕÒ
+            r = CLIP.find(s, 0);    //æŸ¥æ‰¾
         }
 
-        if (r != string::npos)//ÕÒµ½£¬ĞŞÕıpos·µ»Ø
+        if (r != string::npos)//æ‰¾åˆ°ï¼Œä¿®æ­£posè¿”å›
         {
             POS += int(r);
             pos = POS;
             return true;
         }
 
-        POS = Data::find_start(l);//Î´ÕÒµ½£¬ĞŞÕıPOS
-        c = 0;//´ÓÏÂÒ»ĞĞµÚ0ÁĞ¿ªÊ¼
-        l++;//ÏÂÒ»ĞĞ
+        POS = Data::find_start(l);//æœªæ‰¾åˆ°ï¼Œä¿®æ­£POS
+        c = 0;//ä»ä¸‹ä¸€è¡Œç¬¬0åˆ—å¼€å§‹
+        l++;//ä¸‹ä¸€è¡Œ
         length = 0;
         currentline = currentline->nextLine;
     }
 
-    //ÖÁÎÄ±¾Ä©Î²¾ùÎ´ÕÒµ½£¬Ôò·µ»Ø¿ªÍ·¿ªÊ¼²éÕÒ£¬ÄÚÈİÍ¨Í¬ÉÏ²¿·ÖÏàÍ¬
+    //è‡³æ–‡æœ¬æœ«å°¾å‡æœªæ‰¾åˆ°ï¼Œåˆ™è¿”å›å¼€å¤´å¼€å§‹æŸ¥æ‰¾ï¼Œå†…å®¹é€šåŒä¸Šéƒ¨åˆ†ç›¸åŒ
     c = 0;
     l = 0;
     POS = 0;
@@ -327,18 +327,18 @@ bool Data::Find(int &pos, string s)
 }
 //----------------------------------------------------------------------------//
 
-//-------------------´ÓµÚ0ĞĞµ½µÚlĞĞÔªËØ¸öÊı-----------------------------------//
+//-------------------ä»ç¬¬0è¡Œåˆ°ç¬¬lè¡Œå…ƒç´ ä¸ªæ•°-----------------------------------//
 int Data::find_start(int l)
 {
     int s = 0;
     Line *currentline = firstline;
     Block *currentblock = currentline->nextBlock;
 
-    for (int i = 0; i <= l; i++)//±ãÀûÃ¿Ò»ĞĞ
+    for (int i = 0; i <= l; i++)//ä¾¿åˆ©æ¯ä¸€è¡Œ
     {
         currentblock = currentline->nextBlock;
 
-        while (currentblock != NULL)//±éÀúµ±Ç°ĞĞÃ¿Ò»¿é
+        while (currentblock != NULL)//éå†å½“å‰è¡Œæ¯ä¸€å—
         {
             s += currentblock->L;
             currentblock = currentblock->nextBlock;
@@ -351,19 +351,19 @@ int Data::find_start(int l)
 }
 //----------------------------------------------------------------------------//
 
-//---------------------------------Ìæ»»º¯Êı-----------------------------------//
+//---------------------------------æ›¿æ¢å‡½æ•°-----------------------------------//
 bool Data::Replace(int beg, int end, string s)
 {
     int l = 0, c = 0;
     bool flag = true;
-    find_pos(beg, l, c);//µÃµ½Ìæ»»´®ÆğÊ¼Î»ÖÃĞĞÁĞºÅ
+    find_pos(beg, l, c);//å¾—åˆ°æ›¿æ¢ä¸²èµ·å§‹ä½ç½®è¡Œåˆ—å·
 
-    for (int i = beg; i < end; i++)//ÏÈ½«´úÌæ»¹²¿·ÖÉ¾³ı
+    for (int i = beg; i < end; i++)//å…ˆå°†ä»£æ›¿è¿˜éƒ¨åˆ†åˆ é™¤
     {
         flag = flag && Delete(l, c);
     }
 
-    if (s != "")//·Ç¿ÕÔòÕ³Ìù
+    if (s != "")//éç©ºåˆ™ç²˜è´´
     {
         string CLIP = clip;
         clip = s;
@@ -375,16 +375,16 @@ bool Data::Replace(int beg, int end, string s)
 }
 //----------------------------------------------------------------------------//
 
-//--------------------------É¾³ıº¯Êı------------------------------------------//
+//--------------------------åˆ é™¤å‡½æ•°------------------------------------------//
 bool Data::Delete(int l, int c)
 {
     Block *currentblock = NULL;
     Line *currentline = NULL;
-    currentline = get_line(l);//µÃµ½µ±Ç°ĞĞ
-    currentblock = get_block(currentline, c);//µÃµ½µ±Ç°ÁĞ
-    int C = get_block_pos(c);//µÃµ½¿éÄÚÎ»ÖÃ
+    currentline = get_line(l);//å¾—åˆ°å½“å‰è¡Œ
+    currentblock = get_block(currentline, c);//å¾—åˆ°å½“å‰åˆ—
+    int C = get_block_pos(c);//å¾—åˆ°å—å†…ä½ç½®
 
-    if (currentblock->nextBlock == NULL && currentline->nextLine == NULL && currentblock->L == (C + 1))//É¾³ıÎ»ÖÃÎªÎÄ±¾Ä©Î²
+    if (currentblock->nextBlock == NULL && currentline->nextLine == NULL && currentblock->L == (C + 1))//åˆ é™¤ä½ç½®ä¸ºæ–‡æœ¬æœ«å°¾
     {
         if (currentblock->L != 0)
         {
@@ -394,30 +394,30 @@ bool Data::Delete(int l, int c)
         return true;
     }
 
-    if (currentblock->nextBlock == NULL && currentblock->L == (C + 1))//É¾³ıÎ»ÖÃÎªĞĞÄ©»Ø³µ·û
+    if (currentblock->nextBlock == NULL && currentblock->L == (C + 1))//åˆ é™¤ä½ç½®ä¸ºè¡Œæœ«å›è½¦ç¬¦
     {
-        Line *temp = currentline->nextLine;//ÁÙÊ±Ö¸Õë´æ·ÅÏÂÒ»ĞĞµØÖ·
+        Line *temp = currentline->nextLine;//ä¸´æ—¶æŒ‡é’ˆå­˜æ”¾ä¸‹ä¸€è¡Œåœ°å€
         int length = 0;
         string CLIP = "";
 
         if (temp->nextBlock != NULL)
         {
-            CLIP = copy_line(temp->nextBlock, 0, length);    //¸´ÖÆÏÂÒ»ĞĞ
+            CLIP = copy_line(temp->nextBlock, 0, length);    //å¤åˆ¶ä¸‹ä¸€è¡Œ
         }
 
-        currentblock->L = C; //ĞŞÕıµ±Ç°¿éÄÚÔªËØ¸öÊı
-        insert_line(currentblock, CLIP, length);//½«ÏÂÒ»ĞĞ²åÈë
-        currentline->nextLine = temp->nextLine;//ĞŞÕıÖ¸Õë
+        currentblock->L = C; //ä¿®æ­£å½“å‰å—å†…å…ƒç´ ä¸ªæ•°
+        insert_line(currentblock, CLIP, length);//å°†ä¸‹ä¸€è¡Œæ’å…¥
+        currentline->nextLine = temp->nextLine;//ä¿®æ­£æŒ‡é’ˆ
     }
-    else//Õı³£É¾³ı
+    else//æ­£å¸¸åˆ é™¤
     {
         int length = 0;
-        Block *temp = get_block(currentline, c + 1);//µÃµ½ºóĞø×Ö·û¿é
-        string CLIP = copy_line(temp, c + 1, length); //¿½±´ºóĞø×Ö·û
-        delete_block(currentblock->nextBlock);//ÊÍ·ÅÄÚ´æ
-        currentblock->nextBlock = NULL; //³õÊ¼»¯
-        (currentblock->L) = C; //ĞŞÕı
-        insert_line(currentblock, CLIP, length);//ÖØĞÂ²åÈë
+        Block *temp = get_block(currentline, c + 1);//å¾—åˆ°åç»­å­—ç¬¦å—
+        string CLIP = copy_line(temp, c + 1, length); //æ‹·è´åç»­å­—ç¬¦
+        delete_block(currentblock->nextBlock);//é‡Šæ”¾å†…å­˜
+        currentblock->nextBlock = NULL; //åˆå§‹åŒ–
+        (currentblock->L) = C; //ä¿®æ­£
+        insert_line(currentblock, CLIP, length);//é‡æ–°æ’å…¥
     }
 
     return true;
@@ -429,17 +429,17 @@ bool Data::Backspace(int l, int c)
 {
     Line *currentline = NULL;
 
-    if (l == 0 && c == 0)//Î»ÖÃÔÚÎÄ±¾×î¿ªÊ¼£¬ÎŞĞ§²Ù×÷
+    if (l == 0 && c == 0)//ä½ç½®åœ¨æ–‡æœ¬æœ€å¼€å§‹ï¼Œæ— æ•ˆæ“ä½œ
     {
         return true;
     }
 
-    if (c != 0)//Õı³£×ª»¯Îªdelete
+    if (c != 0)//æ­£å¸¸è½¬åŒ–ä¸ºdelete
     {
         return Data::Delete(l, c - 1);
     }
 
-    //ĞĞÊ×backspace£¬ĞèÒªºÏ²¢Á½ĞĞ
+    //è¡Œé¦–backspaceï¼Œéœ€è¦åˆå¹¶ä¸¤è¡Œ
     l--;
     currentline = get_line(l);
     int C = 0;
@@ -453,7 +453,7 @@ bool Data::Backspace(int l, int c)
 }
 //----------------------------------------------------------------------------//
 
-//-------------------------------»Ø³µº¯Êı-------------------------------------//
+//-------------------------------å›è½¦å‡½æ•°-------------------------------------//
 bool Data::Enter(int l, int c)
 {
     Block *currentblock = NULL;
@@ -461,11 +461,11 @@ bool Data::Enter(int l, int c)
     int length = 0;
     currentline = get_line(l);
     currentblock = get_block(currentline, c);
-    string CLIP = copy_line(currentblock, c, length);//¸´ÖÆ»Ø³µ¼üºóĞøÄÚÈİ
-    delete_block(currentblock->nextBlock);//ÊÍ·ÅÄÚ´æ
+    string CLIP = copy_line(currentblock, c, length);//å¤åˆ¶å›è½¦é”®åç»­å†…å®¹
+    delete_block(currentblock->nextBlock);//é‡Šæ”¾å†…å­˜
     currentblock->nextBlock = NULL;
-    currentblock->L = get_block_pos(c) + 1; //ĞŞÕı¿éÄÚÔªËØÊıÁ¿
-    currentblock->block[currentblock->L - 1] = '\n';//Ìí¼Ó»Ø³µ·û
+    currentblock->L = get_block_pos(c) + 1; //ä¿®æ­£å—å†…å…ƒç´ æ•°é‡
+    currentblock->block[currentblock->L - 1] = '\n';//æ·»åŠ å›è½¦ç¬¦
     Line *temp = currentline->nextLine;
     currentline->nextLine = NULL;
     create_line(currentline);
@@ -473,7 +473,7 @@ bool Data::Enter(int l, int c)
     currentline->nextLine = temp;
     currentblock = currentline->nextBlock;
 
-    if (currentblock == NULL && length != 0)//ÎÄ±¾Ä©Î²»Ø³µ£¬ĞèÒª½¨Á¢ĞÂµÄĞĞ
+    if (currentblock == NULL && length != 0)//æ–‡æœ¬æœ«å°¾å›è½¦ï¼Œéœ€è¦å»ºç«‹æ–°çš„è¡Œ
     {
         currentline->nextBlock = new Block;
         currentblock = currentline->nextBlock;
@@ -481,12 +481,12 @@ bool Data::Enter(int l, int c)
         currentblock->nextBlock = NULL;
     }
 
-    insert_line(currentblock, CLIP, length);//²åÈëºóĞøÄÚÈİ
+    insert_line(currentblock, CLIP, length);//æ’å…¥åç»­å†…å®¹
     return true;
 }
 //----------------------------------------------------------------------------//
 
-//---------------------------------¸üĞÂº¯Êı-----------------------------------//
+//---------------------------------æ›´æ–°å‡½æ•°-----------------------------------//
 bool Data::Update(string s, int l, int c)
 {
     int length = 0;
@@ -495,24 +495,24 @@ bool Data::Update(string s, int l, int c)
     Line *currentline = NULL;
     currentline = get_line(l);
     currentblock = get_block(currentline, c);
-    CLIP = copy_line(currentblock, c, length);//±£´æ¸üĞÂÎ»ÖÃµÄºóĞøÄÚÈİ
-    delete_block(currentblock->nextBlock);//ÊÍ·ÅÄÚ´æ
+    CLIP = copy_line(currentblock, c, length);//ä¿å­˜æ›´æ–°ä½ç½®çš„åç»­å†…å®¹
+    delete_block(currentblock->nextBlock);//é‡Šæ”¾å†…å­˜
     currentblock->nextBlock = NULL;
-    currentblock->L = get_block_pos(c);//ĞŞÕıÊıÁ¿
-    CLIP = s + CLIP;//Á¬½ÓÄÚÈİ
+    currentblock->L = get_block_pos(c);//ä¿®æ­£æ•°é‡
+    CLIP = s + CLIP;//è¿æ¥å†…å®¹
 
-    if (length == 0)//ºóĞøÄÚÈİÎª¿Õ
+    if (length == 0)//åç»­å†…å®¹ä¸ºç©º
     {
         CLIP = s;
     }
 
     length++;
-    insert_line(currentblock, CLIP, length);//½«È«²¿ÄÚÈİ²åÈë
+    insert_line(currentblock, CLIP, length);//å°†å…¨éƒ¨å†…å®¹æ’å…¥
     return true;
 }
 //----------------------------------------------------------------------------//
 
-//------------------------------------ÊÍ·Åº¯Êı--------------------------------//
+//------------------------------------é‡Šæ”¾å‡½æ•°--------------------------------//
 bool Data::Clear()
 {
     delete_line(firstline);
@@ -522,10 +522,10 @@ bool Data::Clear()
 }
 //----------------------------------------------------------------------------//
 
-//-----------------------------------ÊÍ·ÅĞĞ-----------------------------------//
+//-----------------------------------é‡Šæ”¾è¡Œ-----------------------------------//
 void Data::delete_line(Line *currentline)
 {
-    if (currentline != NULL)//»ØËİ·¨ÊÍ·Å
+    if (currentline != NULL)//å›æº¯æ³•é‡Šæ”¾
     {
         delete_block(currentline->nextBlock);
         delete_line(currentline->nextLine);
@@ -535,18 +535,18 @@ void Data::delete_line(Line *currentline)
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
-string Data::Clip()                          //·µ»Ø¼ôÇĞ°åÊı¾İ
+string Data::Clip()                          //è¿”å›å‰ªåˆ‡æ¿æ•°æ®
 {
     return clip;
 }
 //----------------------------------------------------------------------------//
 
-//--------------------------------Éú³ÉÎÄ±¾º¯Êı--------------------------------//
+//--------------------------------ç”Ÿæˆæ–‡æœ¬å‡½æ•°--------------------------------//
 string Data::Text()
 {
     string CLIP;
 
-    //ÒÀ´Î±éÀúÃ¿ĞĞÃ»ÁĞ£¬Éú³ÉÒ»¸ö×Ö·û´®
+    //ä¾æ¬¡éå†æ¯è¡Œæ²¡åˆ—ï¼Œç”Ÿæˆä¸€ä¸ªå­—ç¬¦ä¸²
     for (Line *currentline = firstline; currentline != NULL; currentline = currentline->nextLine)
     {
         for (Block *currentblock = currentline->nextBlock; currentblock != NULL; currentblock = currentblock->nextBlock)
@@ -562,7 +562,7 @@ string Data::Text()
 }
 //----------------------------------------------------------------------------//
 
-//---------------------------ĞÂ½¨ĞĞ-------------------------------------------//
+//---------------------------æ–°å»ºè¡Œ-------------------------------------------//
 void Data::create_line(Line * &currentline)
 {
     currentline->nextLine = new Line;
@@ -571,7 +571,7 @@ void Data::create_line(Line * &currentline)
 }
 //----------------------------------------------------------------------------//
 
-//---------------------------µÃµ½µÚlĞĞµÄÖ¸Õë----------------------------------//
+//---------------------------å¾—åˆ°ç¬¬lè¡Œçš„æŒ‡é’ˆ----------------------------------//
 Line* Data::get_line(int l)
 {
     if (firstline == NULL)
@@ -597,13 +597,13 @@ Line* Data::get_line(int l)
 }
 //----------------------------------------------------------------------------//
 
-//------------------------¸´ÖÆÕûĞĞ--------------------------------------------//
+//------------------------å¤åˆ¶æ•´è¡Œ--------------------------------------------//
 string Data::copy_line(Block *currentblock, int beg, int &le)
 {
     string CLIP = "";
-    beg = get_block_pos(beg);//µÃµ½¿éÄÚÎ»ÖÃ
+    beg = get_block_pos(beg);//å¾—åˆ°å—å†…ä½ç½®
 
-    for (int i = beg; i < currentblock->L; i++)//Ê×ÏÈ¸´ÖÆµ±Ç°¿éÄÚÄÚÈİ
+    for (int i = beg; i < currentblock->L; i++)//é¦–å…ˆå¤åˆ¶å½“å‰å—å†…å†…å®¹
     {
         le++;
         CLIP += currentblock->block[i];
@@ -611,7 +611,7 @@ string Data::copy_line(Block *currentblock, int beg, int &le)
 
     currentblock = currentblock->nextBlock;
 
-    while (currentblock != NULL)//¸´ÖÆºóĞøÕû¿éµÄÄÚÈİ
+    while (currentblock != NULL)//å¤åˆ¶åç»­æ•´å—çš„å†…å®¹
     {
         for (int i = 0; i < currentblock->L; i++)
         {
@@ -626,14 +626,14 @@ string Data::copy_line(Block *currentblock, int beg, int &le)
 }
 //----------------------------------------------------------------------------//
 
-//------------------------ÔÚµ±Ç°¿éºó²åÈëCLIP----------------------------------//
+//------------------------åœ¨å½“å‰å—åæ’å…¥CLIP----------------------------------//
 void Data::insert_line(Block *currentblock, string CLIP, int length)
 {
     int i = 0;
 
-    while (i < length)//Öğ¸ö²åÈë
+    while (i < length)//é€ä¸ªæ’å…¥
     {
-        if (currentblock->L == 80)//µ±Ç°¿éÒÑÂú£¬ĞèĞÂ½¨
+        if (currentblock->L == 80)//å½“å‰å—å·²æ»¡ï¼Œéœ€æ–°å»º
         {
             if (currentblock->nextBlock == NULL)
             {
@@ -643,14 +643,14 @@ void Data::insert_line(Block *currentblock, string CLIP, int length)
             currentblock = currentblock->nextBlock;
         }
 
-        currentblock->block[currentblock->L] = CLIP[i];//²åÈë
-        currentblock->L++;//ĞŞÕı
+        currentblock->block[currentblock->L] = CLIP[i];//æ’å…¥
+        currentblock->L++;//ä¿®æ­£
         i++;
     }
 }
 //----------------------------------------------------------------------------//
 
-//--------------------------½¨Á¢¿éÁ´±í----------------------------------------//
+//--------------------------å»ºç«‹å—é“¾è¡¨----------------------------------------//
 void Data::create_block(Block * &currentblock)
 {
     currentblock->nextBlock = new Block;
@@ -659,7 +659,7 @@ void Data::create_block(Block * &currentblock)
 }
 //----------------------------------------------------------------------------//
 
-//-------------------------µÃµ½µ±Ç°¿éµØÖ·-------------------------------------//
+//-------------------------å¾—åˆ°å½“å‰å—åœ°å€-------------------------------------//
 Block* Data::get_block(Line *currentline, int c)
 {
     Block *currentblock = currentline->nextBlock;
@@ -672,7 +672,7 @@ Block* Data::get_block(Line *currentline, int c)
         currentblock->nextBlock = NULL;
     }
 
-    for (int i = 79; i < c; i += 80)//Öğ¸ö¿é±éÀú
+    for (int i = 79; i < c; i += 80)//é€ä¸ªå—éå†
     {
         if (currentblock->nextBlock == NULL)
         {
@@ -686,7 +686,7 @@ Block* Data::get_block(Line *currentline, int c)
 }
 //----------------------------------------------------------------------------//
 
-//----------------µÃµ½µ±Ç°¿éµØÖ·£¬²¢ÇÒ²»½øĞĞĞÂ½¨²Ù×÷--------------------------//
+//----------------å¾—åˆ°å½“å‰å—åœ°å€ï¼Œå¹¶ä¸”ä¸è¿›è¡Œæ–°å»ºæ“ä½œ--------------------------//
 Block* Data::get_block_no_create(Line *currentline, int c)
 {
     Block *currentblock = currentline->nextBlock;
@@ -710,7 +710,7 @@ Block* Data::get_block_no_create(Line *currentline, int c)
 }
 //----------------------------------------------------------------------------//
 
-//--------------------------»ØËİÊÍ·ÅÒ»ĞĞÖĞµÄÈ«²¿¿é----------------------------//
+//--------------------------å›æº¯é‡Šæ”¾ä¸€è¡Œä¸­çš„å…¨éƒ¨å—----------------------------//
 void Data::delete_block(Block *currentblock)
 {
     if (currentblock != NULL)
@@ -721,7 +721,7 @@ void Data::delete_block(Block *currentblock)
 }
 //----------------------------------------------------------------------------//
 
-//-------------------------------µÃµ½¿éÄÚÎ»ÖÃ---------------------------------//
+//-------------------------------å¾—åˆ°å—å†…ä½ç½®---------------------------------//
 int Data::get_block_pos(int x)
 {
     while (x >= 80)

@@ -17,27 +17,27 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->textEdit->data = &data;
     ui->textEdit->installEventFilter(this);
-    // ³õÊ¼»¯ÎÄ¼şÎªÎ´±£´æ¹ı×´Ì¬
+    // åˆå§‹åŒ–æ–‡ä»¶ä¸ºæœªä¿å­˜è¿‡çŠ¶æ€
     isSaved = false;
-    // ³õÊ¼»¯ÎÄ¼şÃûÎª"Î´ÃüÃû.txt"
-    curFile = tr("Î´ÃüÃû.txt");
-    // ³õÊ¼»¯Ö÷´°¿ÚµÄ±êÌâ
+    // åˆå§‹åŒ–æ–‡ä»¶åä¸º"æœªå‘½å.txt"
+    curFile = tr("æœªå‘½å.txt");
+    // åˆå§‹åŒ–ä¸»çª—å£çš„æ ‡é¢˜
     setWindowTitle(curFile);
-    // ³õÊ¼»¯×´Ì¬À¸
+    // åˆå§‹åŒ–çŠ¶æ€æ 
     init_statusBar();
-    // Á´½Ó
+    // é“¾æ¥
     connect(ui->textEdit, SIGNAL(cursorPositionChanged()), this, SLOT(do_cursorChanged()));
 }
 
-bool MainWindow::eventFilter(QObject* target , QEvent* event)         // ÊÂ¼ş¹ıÂË
+bool MainWindow::eventFilter(QObject* target , QEvent* event)         // äº‹ä»¶è¿‡æ»¤
 {
-    if (target == ui->textEdit)                                       //¹ıÂË±à¼­ÇøµÄ°´¼ü²Ù×÷
+    if (target == ui->textEdit)                                       //è¿‡æ»¤ç¼–è¾‘åŒºçš„æŒ‰é”®æ“ä½œ
     {
         if (event->type() == QEvent::KeyPress)
         {
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
-            if (keyEvent->modifiers() == Qt::ControlModifier)         //ctrlĞŞÊÎ
+            if (keyEvent->modifiers() == Qt::ControlModifier)         //ctrlä¿®é¥°
             {
                 switch (keyEvent->key())
                 {
@@ -65,37 +65,37 @@ bool MainWindow::eventFilter(QObject* target , QEvent* event)         // ÊÂ¼ş¹ıÂ
     return false;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)                       //Ö÷´°¿ÚÍË³öÌáÊ¾
+void MainWindow::closeEvent(QCloseEvent *event)                       //ä¸»çª—å£é€€å‡ºæç¤º
 {
     on_action_Quit_triggered();
     event->accept();
 }
 
-// ĞÂ½¨²Ù×÷
+// æ–°å»ºæ“ä½œ
 void MainWindow::on_action_New_triggered()
 {
     do_file_New();
 }
 
-// ±£´æ²Ù×÷
+// ä¿å­˜æ“ä½œ
 void MainWindow::on_action_Save_triggered()
 {
     do_file_Save();
 }
 
-// Áí´æÎª²Ù×÷
+// å¦å­˜ä¸ºæ“ä½œ
 void MainWindow::on_action_SaveAs_triggered()
 {
     do_file_SaveAs();
 }
 
-// ´ò¿ª²Ù×÷
+// æ‰“å¼€æ“ä½œ
 void MainWindow::on_action_Open_triggered()
 {
     do_file_Open();
 }
 
-// ¹Ø±Õ²Ù×÷
+// å…³é—­æ“ä½œ
 void MainWindow::on_action_Close_triggered()
 {
     do_file_SaveOrNot();
@@ -103,16 +103,16 @@ void MainWindow::on_action_Close_triggered()
     bar->clearMessage();
 }
 
-// ÍË³ö²Ù×÷
+// é€€å‡ºæ“ä½œ
 void MainWindow::on_action_Quit_triggered()
 {
-    // ÏÈÖ´ĞĞ¹Ø±Õ²Ù×÷
+    // å…ˆæ‰§è¡Œå…³é—­æ“ä½œ
     on_action_Close_triggered();
-    // ÔÙÍË³öÏµÍ³£¬qAppÊÇÖ¸ÏòÓ¦ÓÃ³ÌĞòµÄÈ«¾ÖÖ¸Õë
+    // å†é€€å‡ºç³»ç»Ÿï¼ŒqAppæ˜¯æŒ‡å‘åº”ç”¨ç¨‹åºçš„å…¨å±€æŒ‡é’ˆ
     qApp->quit();
 }
 
-// ¼ôÇĞ²Ù×÷
+// å‰ªåˆ‡æ“ä½œ
 void MainWindow::on_action_Cut_triggered()
 {
     QTextCursor cursor = ui->textEdit->textCursor();
@@ -124,42 +124,42 @@ void MainWindow::on_action_Cut_triggered()
             QString s = "";
             cursor.insertText(s);
             ui->textEdit->setTextCursor(cursor);
-            bar->showMessage(bar->currentMessage() + tr("    ¼ôÇĞ³É¹¦£¡"));
+            bar->showMessage(bar->currentMessage() + tr("    å‰ªåˆ‡æˆåŠŸï¼"));
             ui->textEdit->isModified = true;
         }
         else
         {
-            bar->showMessage(bar->currentMessage() + tr("    ¼ôÇĞÊ§°Ü£¡"));
+            bar->showMessage(bar->currentMessage() + tr("    å‰ªåˆ‡å¤±è´¥ï¼"));
         }
     }
 
     //ui->textEdit->cut();
 }
 
-// ¸´ÖÆ²Ù×÷
+// å¤åˆ¶æ“ä½œ
 void MainWindow::on_action_Copy_triggered()
 {
     QTextCursor cursor = ui->textEdit->textCursor();
 
     if (cursor.hasSelection())
     {
-        if (data.Copy(cursor.selectionStart(), cursor.selectionEnd())) // ´ÓÎÄ±¾¿ªÍ·¼ÆÊı,×ó¿ªÓÒ±Õ
+        if (data.Copy(cursor.selectionStart(), cursor.selectionEnd())) // ä»æ–‡æœ¬å¼€å¤´è®¡æ•°,å·¦å¼€å³é—­
         {
-            bar->showMessage(bar->currentMessage() + tr("    ¸´ÖÆ³É¹¦£¡"));
+            bar->showMessage(bar->currentMessage() + tr("    å¤åˆ¶æˆåŠŸï¼"));
         }
         else
         {
-            bar->showMessage(bar->currentMessage() + tr("    ¸´ÖÆÊ§°Ü£¡"));
+            bar->showMessage(bar->currentMessage() + tr("    å¤åˆ¶å¤±è´¥ï¼"));
         }
     }
 
     //ui->textEdit->copy();
 }
 
-// Õ³Ìù²Ù×÷
+// ç²˜è´´æ“ä½œ
 void MainWindow::on_action_Paste_triggered()
 {
-    if (data.Clip().empty())  //¼ôÇĞ°åÎŞÄÚÈİ
+    if (data.Clip().empty())  //å‰ªåˆ‡æ¿æ— å†…å®¹
     {
         return ;
     }
@@ -169,16 +169,16 @@ void MainWindow::on_action_Paste_triggered()
     rowNum = cursor.blockNumber();
     colNum = cursor.columnNumber();
 
-    if (data.Paste(rowNum, colNum))      //¹â±êËùÔÚĞĞÊıºÍÁĞÊı
+    if (data.Paste(rowNum, colNum))      //å…‰æ ‡æ‰€åœ¨è¡Œæ•°å’Œåˆ—æ•°
     {
         QString qs = QString::fromStdString(data.Clip());
         cursor.insertText(qs);
-        bar->showMessage(bar->currentMessage() + tr("    Õ³Ìù³É¹¦£¡"));
+        bar->showMessage(bar->currentMessage() + tr("    ç²˜è´´æˆåŠŸï¼"));
         ui->textEdit->isModified = true;
     }
     else
     {
-        bar->showMessage(bar->currentMessage() + tr("    Õ³ÌùÊ§°Ü£¡"));
+        bar->showMessage(bar->currentMessage() + tr("    ç²˜è´´å¤±è´¥ï¼"));
     }
 
     //ui->textEdit->paste();
@@ -186,9 +186,9 @@ void MainWindow::on_action_Paste_triggered()
 
 void MainWindow::init_statusBar()
 {
-    // »ñÈ¡×´Ì¬À¸
+    // è·å–çŠ¶æ€æ 
     bar = ui->statusBar;
-    bar->showMessage(tr("»¶Ó­Ê¹ÓÃ"));
+    bar->showMessage(tr("æ¬¢è¿ä½¿ç”¨"));
 }
 
 void MainWindow::do_cursorChanged()
@@ -198,18 +198,18 @@ void MainWindow::do_cursorChanged()
     int rowNum = 0, colNum = 0;
     rowNum = cursor.blockNumber();
     colNum = cursor.columnNumber();
-    bar->showMessage(tr("%1ĞĞ %2ÁĞ").arg(rowNum).arg(colNum));
+    bar->showMessage(tr("%1è¡Œ %2åˆ—").arg(rowNum).arg(colNum));
 }
 
 void MainWindow::on_action_Find_triggered()
 {
     QTextCursor cur = ui->textEdit->textCursor();
     //ui->textEdit->setFocus();
-    // ĞÂ½¨Ò»¸ö¶Ô»°¿ò£¬ÓÃÓÚ²éÕÒ²Ù×÷£¬this±íÃ÷ËüµÄ¸¸´°¿ÚÊÇMainWindow¡£
+    // æ–°å»ºä¸€ä¸ªå¯¹è¯æ¡†ï¼Œç”¨äºæŸ¥æ‰¾æ“ä½œï¼Œthisè¡¨æ˜å®ƒçš„çˆ¶çª—å£æ˜¯MainWindowã€‚
     QDialog *findDlg = new QDialog(this);
-    // ÉèÖÃ¶Ô»°¿òµÄ±êÌâ
-    findDlg->setWindowTitle(tr("²éÕÒ"));
-    // ½«ĞĞ±à¼­Æ÷¼ÓÈëµ½ĞÂ½¨µÄ²éÕÒ¶Ô»°¿òÖĞ
+    // è®¾ç½®å¯¹è¯æ¡†çš„æ ‡é¢˜
+    findDlg->setWindowTitle(tr("æŸ¥æ‰¾"));
+    // å°†è¡Œç¼–è¾‘å™¨åŠ å…¥åˆ°æ–°å»ºçš„æŸ¥æ‰¾å¯¹è¯æ¡†ä¸­
     find_textLineEdit = new QLineEdit(findDlg);
 
     if (cur.hasSelection())
@@ -217,47 +217,47 @@ void MainWindow::on_action_Find_triggered()
         find_textLineEdit->setText(cur.selectedText());
     }
 
-    // ¼ÓÈëÒ»¸ö"²éÕÒÏÂÒ»¸ö"µÄ°´Å¥
-    QPushButton *find_Btn = new QPushButton(tr("²éÕÒÏÂÒ»¸ö"), findDlg);
-    // ĞÂ½¨Ò»¸ö´¹Ö±²¼¾Ö¹ÜÀíÆ÷£¬²¢½«ĞĞ±à¼­Æ÷ºÍ°´Å¥¼ÓÈëÆäÖĞ
+    // åŠ å…¥ä¸€ä¸ª"æŸ¥æ‰¾ä¸‹ä¸€ä¸ª"çš„æŒ‰é’®
+    QPushButton *find_Btn = new QPushButton(tr("æŸ¥æ‰¾ä¸‹ä¸€ä¸ª"), findDlg);
+    // æ–°å»ºä¸€ä¸ªå‚ç›´å¸ƒå±€ç®¡ç†å™¨ï¼Œå¹¶å°†è¡Œç¼–è¾‘å™¨å’ŒæŒ‰é’®åŠ å…¥å…¶ä¸­
     QVBoxLayout* layout = new QVBoxLayout(findDlg);
     layout->addWidget(find_textLineEdit);
     layout->addWidget(find_Btn);
-    // ÏÔÊ¾¶Ô»°¿ò
+    // æ˜¾ç¤ºå¯¹è¯æ¡†
     findDlg->show();
-    // ÉèÖÃ"²éÕÒÏÂÒ»¸ö"°´Å¥µÄµ¥»÷ÊÂ¼şºÍÆä²Ûº¯ÊıµÄ¹ØÁª
+    // è®¾ç½®"æŸ¥æ‰¾ä¸‹ä¸€ä¸ª"æŒ‰é’®çš„å•å‡»äº‹ä»¶å’Œå…¶æ§½å‡½æ•°çš„å…³è”
     connect(find_Btn, SIGNAL(clicked()), this, SLOT(show_findText()));
 }
 
 void MainWindow::on_action_Replace_triggered()
 {
-    // ĞÂ½¨Ò»¸ö¶Ô»°¿ò£¬ÓÃÓÚÌæ»»²Ù×÷£¬this±íÃ÷ËüµÄ¸¸´°¿ÚÊÇMainWindow¡£
+    // æ–°å»ºä¸€ä¸ªå¯¹è¯æ¡†ï¼Œç”¨äºæ›¿æ¢æ“ä½œï¼Œthisè¡¨æ˜å®ƒçš„çˆ¶çª—å£æ˜¯MainWindowã€‚
     QDialog *replaceDlg = new QDialog(this);
-    replaceDlg->setWindowTitle(tr("Ìæ»»"));    // ÉèÖÃ¶Ô»°¿òµÄ±êÌâ
-    find_textLineEdit = new QLineEdit(replaceDlg);    // ½«ĞĞ±à¼­Æ÷¼ÓÈëµ½ĞÂ½¨µÄÌæ»»¶Ô»°¿òÖĞ
+    replaceDlg->setWindowTitle(tr("æ›¿æ¢"));    // è®¾ç½®å¯¹è¯æ¡†çš„æ ‡é¢˜
+    find_textLineEdit = new QLineEdit(replaceDlg);    // å°†è¡Œç¼–è¾‘å™¨åŠ å…¥åˆ°æ–°å»ºçš„æ›¿æ¢å¯¹è¯æ¡†ä¸­
     replace_textLineEdit = new QLineEdit(replaceDlg);
-    QPushButton *find_Btn = new QPushButton(tr("²éÕÒÏÂÒ»¸ö"), replaceDlg);  // ¼ÓÈëÒ»¸ö"²éÕÒÏÂÒ»¸ö"µÄ°´Å¥
-    QPushButton *replace_Btn = new QPushButton(tr("Ìæ»»"), replaceDlg);
-    QVBoxLayout* layout1 = new QVBoxLayout();     // ĞÂ½¨Ò»¸ö´¹Ö±²¼¾Ö¹ÜÀíÆ÷£¬²¢½«ĞĞ±à¼­Æ÷ºÍ°´Å¥¼ÓÈëÆäÖĞ
+    QPushButton *find_Btn = new QPushButton(tr("æŸ¥æ‰¾ä¸‹ä¸€ä¸ª"), replaceDlg);  // åŠ å…¥ä¸€ä¸ª"æŸ¥æ‰¾ä¸‹ä¸€ä¸ª"çš„æŒ‰é’®
+    QPushButton *replace_Btn = new QPushButton(tr("æ›¿æ¢"), replaceDlg);
+    QVBoxLayout* layout1 = new QVBoxLayout();     // æ–°å»ºä¸€ä¸ªå‚ç›´å¸ƒå±€ç®¡ç†å™¨ï¼Œå¹¶å°†è¡Œç¼–è¾‘å™¨å’ŒæŒ‰é’®åŠ å…¥å…¶ä¸­
     layout1->addWidget(find_textLineEdit);
     layout1->addWidget(replace_textLineEdit);
     QVBoxLayout* layout2 = new QVBoxLayout();
     layout2->addWidget(find_Btn);
     layout2->addWidget(replace_Btn);
-    QHBoxLayout* layout = new QHBoxLayout(replaceDlg);   // ĞÂ½¨Ò»¸öË®Æ½²¼¾Ö¹ÜÀíÆ÷
+    QHBoxLayout* layout = new QHBoxLayout(replaceDlg);   // æ–°å»ºä¸€ä¸ªæ°´å¹³å¸ƒå±€ç®¡ç†å™¨
     layout->addLayout(layout1);
     layout->addLayout(layout2);
-    replaceDlg ->show();    // ÏÔÊ¾¶Ô»°¿ò
-    // ÉèÖÃ"Ìæ»»"°´Å¥µÄµ¥»÷ÊÂ¼şºÍÆä²Ûº¯ÊıµÄ¹ØÁª
+    replaceDlg ->show();    // æ˜¾ç¤ºå¯¹è¯æ¡†
+    // è®¾ç½®"æ›¿æ¢"æŒ‰é’®çš„å•å‡»äº‹ä»¶å’Œå…¶æ§½å‡½æ•°çš„å…³è”
     connect(find_Btn, SIGNAL(clicked()), this, SLOT(show_findText()));
     connect(replace_Btn, SIGNAL(clicked()), this, SLOT(replace_findText()));
 }
 
 
-// "²éÕÒÏÂÒ»¸ö"°´Å¥µÄ²Ûº¯Êı
+// "æŸ¥æ‰¾ä¸‹ä¸€ä¸ª"æŒ‰é’®çš„æ§½å‡½æ•°
 void MainWindow::show_findText()
 {
-    // »ñÈ¡ĞĞ±à¼­Æ÷ÖĞµÄÄÚÈİ
+    // è·å–è¡Œç¼–è¾‘å™¨ä¸­çš„å†…å®¹
     QString findText = find_textLineEdit->text();
 
     if (findText.size() == 0)
@@ -280,11 +280,11 @@ void MainWindow::show_findText()
     }
     else
     {
-        QMessageBox::warning(this, tr("²éÕÒ"), tr("Î´ÕÒµ½ %1£¡").arg(findText));
+        QMessageBox::warning(this, tr("æŸ¥æ‰¾"), tr("æœªæ‰¾åˆ° %1ï¼").arg(findText));
     }
 }
 
-//"Ìæ»»"°´Å¥µÄ²Ûº¯Êı
+//"æ›¿æ¢"æŒ‰é’®çš„æ§½å‡½æ•°
 void MainWindow::replace_findText()
 {
     QString findText = find_textLineEdit->text();
@@ -301,81 +301,81 @@ void MainWindow::replace_findText()
     }
     else
     {
-        QMessageBox::warning(this, tr("Ìæ»»"), tr("ÇëÏÈ²éÕÒ£¡"));
+        QMessageBox::warning(this, tr("æ›¿æ¢"), tr("è¯·å…ˆæŸ¥æ‰¾ï¼"));
     }
 }
 
-// ±£´æÎÄ¼şÄÚÈİ£¬ÒòÎª¿ÉÄÜ±£´æÊ§°Ü£¬ËùÒÔ¾ßÓĞ·µ»ØÖµ£¬À´±íÃ÷ÊÇ·ñ±£´æ³É¹¦
+// ä¿å­˜æ–‡ä»¶å†…å®¹ï¼Œå› ä¸ºå¯èƒ½ä¿å­˜å¤±è´¥ï¼Œæ‰€ä»¥å…·æœ‰è¿”å›å€¼ï¼Œæ¥è¡¨æ˜æ˜¯å¦ä¿å­˜æˆåŠŸ
 bool MainWindow::saveFile(const QString& fileName)
 {
     QFile file(fileName);
 
-    // ÒÔÖ»Ğ´·½Ê½´ò¿ªÎÄ¼ş£¬Èç¹û´ò¿ªÊ§°ÜÔòµ¯³öÌáÊ¾¿ò²¢·µ»Ø
+    // ä»¥åªå†™æ–¹å¼æ‰“å¼€æ–‡ä»¶ï¼Œå¦‚æœæ‰“å¼€å¤±è´¥åˆ™å¼¹å‡ºæç¤ºæ¡†å¹¶è¿”å›
     if (!file.open(QFile::WriteOnly | QFile::Text))
     {
-        // %1,%2±íÊ¾ºóÃæµÄÁ½¸öarg²ÎÊıµÄÖµ
-        QMessageBox::warning(this, tr("±£´æÎÄ¼ş"),
-                             tr("ÎŞ·¨±£´æÎÄ¼ş %1:\n %2£¡").arg(fileName).arg(file.errorString()));
+        // %1,%2è¡¨ç¤ºåé¢çš„ä¸¤ä¸ªargå‚æ•°çš„å€¼
+        QMessageBox::warning(this, tr("ä¿å­˜æ–‡ä»¶"),
+                             tr("æ— æ³•ä¿å­˜æ–‡ä»¶ %1:\n %2ï¼").arg(fileName).arg(file.errorString()));
         return false;
     }
 
-    // ĞÂ½¨Á÷¶ÔÏó£¬Ö¸ÏòÑ¡¶¨µÄÎÄ¼ş
+    // æ–°å»ºæµå¯¹è±¡ï¼ŒæŒ‡å‘é€‰å®šçš„æ–‡ä»¶
     QTextStream out(&file);
-    // ½«ÎÄ±¾±à¼­Æ÷ÀïµÄÄÚÈİÒÔ´¿ÎÄ±¾µÄÊ½Êä³öµ½Á÷¶ÔÏóÖĞ
+    // å°†æ–‡æœ¬ç¼–è¾‘å™¨é‡Œçš„å†…å®¹ä»¥çº¯æ–‡æœ¬çš„å¼è¾“å‡ºåˆ°æµå¯¹è±¡ä¸­
     string all = data.Text();
     out << QString::fromStdString(all);
     isSaved = true;
     ui->textEdit->isModified = false;
-    // »ñµÃÎÄ¼şµÄ±ê×¼Â·¾¶
+    // è·å¾—æ–‡ä»¶çš„æ ‡å‡†è·¯å¾„
     curFile = QFileInfo(fileName).canonicalFilePath();
-    // ½«´°¿ÚÃû³Æ¸ÄÎªÏÖÔÚ´°¿ÚµÄÂ·¾¶
+    // å°†çª—å£åç§°æ”¹ä¸ºç°åœ¨çª—å£çš„è·¯å¾„
     setWindowTitle(curFile);
-    bar->showMessage(bar->currentMessage() + tr("    ±£´æÎÄ¼ş³É¹¦£¡"));
+    bar->showMessage(bar->currentMessage() + tr("    ä¿å­˜æ–‡ä»¶æˆåŠŸï¼"));
     file.close();
     return true;
 }
 
-// ÎÄ¼şÁí´æÎª
+// æ–‡ä»¶å¦å­˜ä¸º
 void MainWindow::do_file_SaveAs()
 {
-    // »ñµÃÎÄ¼şÃû
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Áí´æÎª"), curFile);
+    // è·å¾—æ–‡ä»¶å
+    QString fileName = QFileDialog::getSaveFileName(this, tr("å¦å­˜ä¸º"), curFile);
 
-    // Èç¹ûÎÄ¼şÃû²»Îª¿Õ£¬Ôò±£´æÎÄ¼şÄÚÈİ
+    // å¦‚æœæ–‡ä»¶åä¸ä¸ºç©ºï¼Œåˆ™ä¿å­˜æ–‡ä»¶å†…å®¹
     if (!fileName.isEmpty())
     {
         saveFile(fileName);
     }
 }
 
-// ±£´æÎÄ¼ş
+// ä¿å­˜æ–‡ä»¶
 void MainWindow::do_file_Save()
 {
-    // Èç¹ûÎÄ¼şÒÑ¾­±»±£´æ¹ı£¬Ö±½Ó±£´æÎÄ¼ş
+    // å¦‚æœæ–‡ä»¶å·²ç»è¢«ä¿å­˜è¿‡ï¼Œç›´æ¥ä¿å­˜æ–‡ä»¶
     if (isSaved)
     {
         saveFile(curFile);
     }
-    // Èç¹ûÎÄ¼şÊÇµÚÒ»´Î±£´æ£¬ÄÇÃ´µ÷ÓÃÁí´æÎª
+    // å¦‚æœæ–‡ä»¶æ˜¯ç¬¬ä¸€æ¬¡ä¿å­˜ï¼Œé‚£ä¹ˆè°ƒç”¨å¦å­˜ä¸º
     else
     {
         do_file_SaveAs();
     }
 }
 
-// µ¯³öÊÇ·ñ±£´æÎÄ¼ş¶Ô»°¿ò
+// å¼¹å‡ºæ˜¯å¦ä¿å­˜æ–‡ä»¶å¯¹è¯æ¡†
 void MainWindow::do_file_SaveOrNot()
 {
-    // Èç¹ûÎÄ¼ş±»¸ü¸Ä¹ı£¬µ¯³ö±£´æ¶Ô»°¿ò
+    // å¦‚æœæ–‡ä»¶è¢«æ›´æ”¹è¿‡ï¼Œå¼¹å‡ºä¿å­˜å¯¹è¯æ¡†
     if (ui->textEdit->isModified)
     {
         QMessageBox box;
-        box.setWindowTitle(tr("¾¯¸æ"));
+        box.setWindowTitle(tr("è­¦å‘Š"));
         box.setIcon(QMessageBox::Warning);
-        box.setText(curFile + tr("ÉĞÎ´±£´æ£¬ÊÇ·ñ±£´æ?"));
+        box.setText(curFile + tr("å°šæœªä¿å­˜ï¼Œæ˜¯å¦ä¿å­˜?"));
         box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
-        // Èç¹ûÑ¡Ôñ±£´æÎÄ¼ş£¬ÔòÖ´ĞĞ±£´æ²Ù×÷
+        // å¦‚æœé€‰æ‹©ä¿å­˜æ–‡ä»¶ï¼Œåˆ™æ‰§è¡Œä¿å­˜æ“ä½œ
         if (box.exec() == QMessageBox::Yes)
         {
             do_file_Save();
@@ -387,76 +387,76 @@ void MainWindow::do_file_SaveOrNot()
     }
 }
 
-// ´ò¿ªÎÄ¼ş
+// æ‰“å¼€æ–‡ä»¶
 void MainWindow::do_file_Open()
 {
-    // ÊÇ·ñĞèÒª±£´æÏÖÓĞÎÄ¼ş
+    // æ˜¯å¦éœ€è¦ä¿å­˜ç°æœ‰æ–‡ä»¶
     do_file_SaveOrNot();
-    // »ñµÃÒª´ò¿ªµÄÎÄ¼şµÄÃû×Ö
+    // è·å¾—è¦æ‰“å¼€çš„æ–‡ä»¶çš„åå­—
     QString fileName = QFileDialog::getOpenFileName(this);
 
-    // Èç¹ûÎÄ¼şÃû²»Îª¿Õ
+    // å¦‚æœæ–‡ä»¶åä¸ä¸ºç©º
     if (!fileName.isEmpty())
     {
         do_file_Load(fileName);
     }
 
-    // ÎÄ±¾±à¼­Æ÷¿É¼û
+    // æ–‡æœ¬ç¼–è¾‘å™¨å¯è§
     ui->textEdit->setVisible(true);
 }
 
-// ¶ÁÈ¡ÎÄ¼ş
+// è¯»å–æ–‡ä»¶
 bool MainWindow::do_file_Load(const QString& fileName)
 {
     QFile file(fileName);
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        QMessageBox::warning(this, tr("¶ÁÈ¡ÎÄ¼ş"), tr("ÎŞ·¨¶ÁÈ¡  ÎÄ¼ş %1:\n%2£¡").arg(fileName).arg(file.errorString()));
-        // Èç¹û´ò¿ªÎÄ¼şÊ§°Ü£¬µ¯³ö¶Ô»°¿ò£¬²¢·µ»Ø
+        QMessageBox::warning(this, tr("è¯»å–æ–‡ä»¶"), tr("æ— æ³•è¯»å–  æ–‡ä»¶ %1:\n%2ï¼").arg(fileName).arg(file.errorString()));
+        // å¦‚æœæ‰“å¼€æ–‡ä»¶å¤±è´¥ï¼Œå¼¹å‡ºå¯¹è¯æ¡†ï¼Œå¹¶è¿”å›
         return false;
     }
 
     QTextStream in(&file);
-    // ½«ÎÄ¼şÖĞµÄËùÓĞÄÚÈİ¶¼Ğ´µ½ÎÄ±¾±à¼­Æ÷ÖĞ
+    // å°†æ–‡ä»¶ä¸­çš„æ‰€æœ‰å†…å®¹éƒ½å†™åˆ°æ–‡æœ¬ç¼–è¾‘å™¨ä¸­
     QString alltext = in.readAll();
     ui->textEdit->setText(alltext);
     data.Load(alltext.toStdString());
     curFile = QFileInfo(fileName).canonicalFilePath();
     setWindowTitle(curFile);
-    bar->showMessage(bar->currentMessage() + tr("    ´ò¿ªÎÄ¼ş³É¹¦£¡"));
+    bar->showMessage(bar->currentMessage() + tr("    æ‰“å¼€æ–‡ä»¶æˆåŠŸï¼"));
     file.close();
     return true;
 }
 
-// ÊµÏÖĞÂ½¨ÎÄ¼şµÄ¹¦ÄÜ
+// å®ç°æ–°å»ºæ–‡ä»¶çš„åŠŸèƒ½
 void MainWindow::do_file_New()
 {
     do_file_SaveOrNot();
     isSaved = false;
-    curFile = tr("Î´ÃüÃû.txt");
+    curFile = tr("æœªå‘½å.txt");
     setWindowTitle(curFile);
-    // Çå¿ÕÎÄ±¾±à¼­Æ÷
+    // æ¸…ç©ºæ–‡æœ¬ç¼–è¾‘å™¨
     ui->textEdit->clear();
     data.Clear();
-    // ÎÄ±¾±à¼­Æ÷¿É¼û
+    // æ–‡æœ¬ç¼–è¾‘å™¨å¯è§
     ui->textEdit->setVisible(true);
 }
 
-// ÏÔÊ¾×÷ÕßĞÅÏ¢
+// æ˜¾ç¤ºä½œè€…ä¿¡æ¯
 void MainWindow::on_action_Author_triggered()
 {
     QDialog *about = new QDialog(this);
-    about->setWindowTitle(tr("¹ØÓÚ"));
+    about->setWindowTitle(tr("å…³äº"));
     QLabel* label_gif = new QLabel(about);
     label_gif->setScaledContents(true);
     QMovie* movie = new QMovie(QString::fromUtf8(":/images/images/cat.gif"));
     movie->start();
     label_gif->setMovie(movie);
-    QLabel* label_info = new QLabel(tr("×÷Õß£º¸ê²ß  ºÎĞÄ  ×ŞÏşÔÃ\nÓÊÏä£º1334527295@qq.com"), about);
+    QLabel* label_info = new QLabel(tr("ä½œè€…ï¼šæˆˆç­–  ä½•å¿ƒ  é‚¹æ™“æ‚¦\né‚®ç®±ï¼š1334527295@qq.com"), about);
     label_info->setScaledContents(true);
     label_info->setAlignment(Qt::AlignCenter);
-    QFont ft(tr("Î¢ÈíÑÅºÚ"), 13);
+    QFont ft(tr("å¾®è½¯é›…é»‘"), 13);
     label_info->setFont(ft);
     QVBoxLayout* layout = new QVBoxLayout(about);
     layout->addWidget(label_gif);

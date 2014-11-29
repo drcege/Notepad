@@ -19,14 +19,14 @@ MyTextEdit::~MyTextEdit()
 void MyTextEdit::keyPressEvent(QKeyEvent *e)
 {
     QTextCursor cursor = textCursor();
-    int rowNum = 0, colNum = 0;                 //ÐÐÁÐºÅ
+    int rowNum = 0, colNum = 0;                 //è¡Œåˆ—å·
 
-    if (e->modifiers() == Qt::NoModifier || e->modifiers() == Qt::ShiftModifier)    //ÎÞCtrlÐÞÊÎ
+    if (e->modifiers() == Qt::NoModifier || e->modifiers() == Qt::ShiftModifier)    //æ— Ctrlä¿®é¥°
     {
-        // ×Ö·ûÊäÈë
+        // å­—ç¬¦è¾“å…¥
         if ((e->key() >= Qt::Key_Space && e->key() <= Qt::Key_AsciiTilde) || e->key() == Qt::Key_Tab)
         {
-            if (cursor.hasSelection())          // ÓÐÑ¡ÖÐ¿éÔòÉ¾³ý
+            if (cursor.hasSelection())          // æœ‰é€‰ä¸­å—åˆ™åˆ é™¤
             {
                 data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
                 cursor.removeSelectedText();
@@ -34,16 +34,16 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
 
             rowNum = cursor.blockNumber();
             colNum = cursor.columnNumber();
-            data->Update(e->text().toStdString(), rowNum, colNum);   //¸üÐÂµ½ÄÚ´æ
-            cursor.insertText(e->text());                            //±à¼­ÇøÏÔÊ¾
+            data->Update(e->text().toStdString(), rowNum, colNum);   //æ›´æ–°åˆ°å†…å­˜
+            cursor.insertText(e->text());                            //ç¼–è¾‘åŒºæ˜¾ç¤º
             isModified = true;
         }
         else
         {
-            //ÆäËû¿ØÖÆÊäÈë
+            //å…¶ä»–æŽ§åˆ¶è¾“å…¥
             if (e->modifiers() == Qt::NoModifier)
             {
-                switch (e->key())                                    //°´¼üÖµ
+                switch (e->key())                                    //æŒ‰é”®å€¼
                 {
                 case Qt::Key_Up:
                     cursor.movePosition(QTextCursor::Up);
@@ -66,7 +66,7 @@ void MyTextEdit::keyPressEvent(QKeyEvent *e)
                     break;
 
                 case Qt::Key_Return:
-                    if (cursor.hasSelection())                      //É¾³ý¿é
+                    if (cursor.hasSelection())                      //åˆ é™¤å—
                     {
                         data->Replace(cursor.selectionStart(), cursor.selectionEnd(), "");
                         cursor.removeSelectedText();

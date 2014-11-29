@@ -49,30 +49,30 @@ private:
     Ui::MainWindow *ui;
     Data data;
 
-    //ÎªtrueÊ±±êÖ¾ÎÄ¼şÒÑ¾­±£´æ£¬ÎªfalseÊ±±êÖ¾ÎÄ¼şÉĞÎ´±£´æ
+    //ä¸ºtrueæ—¶æ ‡å¿—æ–‡ä»¶å·²ç»ä¿å­˜ï¼Œä¸ºfalseæ—¶æ ‡å¿—æ–‡ä»¶å°šæœªä¿å­˜
     bool isSaved;
-    //ÓÃÓÚ±£´æµ±Ç°ÎÄ¼şµÄÎÄ¼şÃû
+    //ç”¨äºä¿å­˜å½“å‰æ–‡ä»¶çš„æ–‡ä»¶å
     QString curFile;
-    //×´Ì¬À¸
+    //çŠ¶æ€æ 
     QStatusBar* bar;
     QLineEdit *find_textLineEdit;
     QLineEdit *replace_textLineEdit;
 
-    //³õÊ¼»¯×´Ì¬À¸º¯Êı
+    //åˆå§‹åŒ–çŠ¶æ€æ å‡½æ•°
     void init_statusBar();
-    //ĞÂ½¨ÎÄ¼şº¯Êı
+    //æ–°å»ºæ–‡ä»¶å‡½æ•°
     void do_file_New();
-    //Ñ¯ÎÊĞŞ¸Ä¹ıµÄÎÄ¼şÊÇ·ñ±£´æº¯Êı
+    //è¯¢é—®ä¿®æ”¹è¿‡çš„æ–‡ä»¶æ˜¯å¦ä¿å­˜å‡½æ•°
     void do_file_SaveOrNot();
-    //±£´æÎÄ¼şº¯Êı
+    //ä¿å­˜æ–‡ä»¶å‡½æ•°
     void do_file_Save();
-    //ÎÄ¼şÁí´æÎªº¯Êı
+    //æ–‡ä»¶å¦å­˜ä¸ºå‡½æ•°
     void do_file_SaveAs();
-    //´æ´¢ÎÄ¼şº¯Êı
+    //å­˜å‚¨æ–‡ä»¶å‡½æ•°
     bool saveFile(const QString& fileName);
-    //´ò¿ªÎÄ¼şº¯Êı
+    //æ‰“å¼€æ–‡ä»¶å‡½æ•°
     void do_file_Open();
-    //¶ÁÈ¡ÎÄ¼şº¯Êı
+    //è¯»å–æ–‡ä»¶å‡½æ•°
     bool do_file_Load(const QString& fileName);
 };
 
