@@ -2,6 +2,6 @@ notepad
 =======
 
 * BUPT
-* Data Structure (数据结构)
+* Data Structure Course Design
 * Text Editor
 * Qt 
